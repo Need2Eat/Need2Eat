@@ -24,7 +24,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   // Contacts Table Columns names
   private static final String KEY_GTIN = "gtin";
   private static final String KEY_NAME = "name";
-  private static final Image KEY_IMAGE = image;
 
   public DatabaseHandler(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -33,8 +32,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   // Creating Tables
   public void onCreate(SQLiteDatabase db) {
     String CREATE_PRODUCTS_TABLE = "CREATE TABLE " + TABLE_PRODUCTS + "("
-        + KEY_GTIN+ " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-        + KEY_IMAGE + " TEXT" + ")";
+        + KEY_GTIN+ " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"+")";
     db.execSQL(CREATE_PRODUCTS_TABLE);
   }
 
@@ -52,29 +50,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     ContentValues values = new ContentValues();
     values.put(KEY_NAME, product.getName());
-    values.put(KEY_IMAGE, product.getImage());
 
     // Inserting Row
     db.insert(TABLE_PRODUCTS, null, values);
     db.close();
   }
 
-  // Getting single contact
+  // Getting single Product
   public Product getProduct(int gtin) {
-
+  return null;
   }
 
   // Getting All Products
   public List<Product> getAllProducts() {
+    return null;
 
   }
 
   // Getting Product Count
   public int getProductsCount() {
+    return 1;
 
   }
   // Updating single Product
   public int updateProduct(Product product) {
+    return 1;
 
   }
 

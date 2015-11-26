@@ -35,22 +35,12 @@ public class Product {
   }
 
   // setting GTIN
-  public void setID(int gtin){
+  public void setGTIN(int gtin){
     this.gtin = gtin;
   }
-
-  // getting Image
-  public Image getImage(){
-    return this.image;
-  }
-
-  // setting Image
-  public void setImage(Image image){
-    this.image = image;
-  }
-
   // getting name
   public String getName(){
+
     return this.name;
   }
 
