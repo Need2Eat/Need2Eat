@@ -23,7 +23,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   private static Image image;
   // Contacts Table Columns names
   private static final String KEY_GTIN = "gtin";
-  private static final String KEY_NAME = "name";
+  public static int KEY_ID;
+  public static String KEY_NAME = "name";
+  public static String KEY_EXPIRYDATE = "expiryDate";
 
   public DatabaseHandler(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -32,7 +34,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   // Creating Tables
   public void onCreate(SQLiteDatabase db) {
     String CREATE_PRODUCTS_TABLE = "CREATE TABLE " + TABLE_PRODUCTS + "("
-        + KEY_GTIN+ " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"+")";
+        + KEY_GTIN+ " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"+
+        KEY_EXPIRYDATE+"TEXT"+")";
     db.execSQL(CREATE_PRODUCTS_TABLE);
   }
 
