@@ -40,7 +40,3 @@ Thumbs.db
 
 # Log Files
 *.log
-
-# Android Studio Libraries
-.idea/libraries/
-.idea/gradle.xml
