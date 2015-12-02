@@ -36,12 +36,8 @@ public class Hoverview extends View {
     return left;
   }
 
-  public int getHoverRight() {
-    return right;
-  }
-
-  public int getHoverAreaWidth() {
-    return right - left;
+  public int getHoverTop() {
+    return top;
   }
 
   @Override
