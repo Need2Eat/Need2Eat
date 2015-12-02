@@ -21,6 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".EditActivity"></activity>
         <meta-data android:name="api_key" android:value="@string/api_key"/>
     </application>
 

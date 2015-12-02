@@ -14,9 +14,9 @@ public class EditActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_edit);
-    initializeListener();
+    //initializeListener();
   }
-
+/*
   private void initializeListener() {
     Button b = (Button)findViewById(R.id.button01);
     b.setOnClickListener(new View.OnClickListener() {
@@ -32,6 +32,6 @@ public class EditActivity extends AppCompatActivity {
     TextView text = (TextView)findViewById(R.id.textView01);
     text.setText(content.getText());
   }
-
+*/
 
 }
