@@ -40,3 +40,6 @@ Thumbs.db
 
 # Log Files
 *.log
+
+# Android Studio
+.idea/
