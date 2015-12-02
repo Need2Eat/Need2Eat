@@ -30,6 +30,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     Connection c = null;
     try {
       Class.forName("org.sqlite.JDBC");
+      /**
+       * n2e.db is our internal database(name)
+       */
       c = DriverManager.getConnection("jdbc:sqlite:n2e.db");
     } catch ( Exception e ) {
       System.err.println( e.getClass().getName() + ": " + e.getMessage() );
@@ -87,16 +90,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     db.close();
   }
 
-  // Getting single Product
   public Product getProduct(String gtin) {
+    /**
+     * Cursor: This interface provides random read-write access
+     * to the result set returned by a database query
+     *
+     * RawQuery: Runs the provided SQL and returns a Cursor over the result set
+     */
+
     Cursor c = db.rawQuery("SELECT * FROM Products WHERE TRIM(gtin) = '"+gtin.trim()+"'", null);
     if(c.moveToFirst()){
       do{
-        //assing values
         gtin = c.getString(1);
         String name = c.getString(0);
         String expiryDate = c.getString(2);
-        //Do something Here with values
       }while(c.moveToNext());
     }
     c.close();
@@ -108,20 +115,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   public Product getAllProducts(String name, String gtin, String expiryDate) {
     Cursor cursor = db.rawQuery("SELECT * FROM Products", null);
 
-    if (cursor.moveToFirst()) // data?
-      name = cursor.getString(cursor.getColumnIndex("name"));
-      gtin = cursor.getString(cursor.getColumnIndex("gtin"));
-      expiryDate = cursor.getString(cursor.getColumnIndex("expiryDate"));
+    if (cursor.moveToFirst()) { // data?
+      do{
+        name = cursor.getString(cursor.getColumnIndex("name"));
+        gtin = cursor.getString(cursor.getColumnIndex("gtin"));
+        expiryDate = cursor.getString(cursor.getColumnIndex("expiryDate"));
+      }while(cursor.moveToNext());
+    }
     cursor.close();
+    db.close();
     return (Product) cursor;
 
   }
 
-  // Getting Product Count
-  public int getProductsCount() {
-    return 1;
-
-  }
   // Updating single Product
   public int updateProduct(Product product) {
     return 1;
@@ -129,8 +135,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   }
 
   // Deleting single Product
-  public void deleteProduct(Product product) {
+  public void deleteProduct(String gtin) {
 
+    try {
+      db.execSQL("DELETE FROM Products where TRIM(gtin)="+gtin.trim());
+    } catch ( Exception e ) {
+      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+    }
+    System.out.println("Deleting of Product successfully");
   }
 }
 
