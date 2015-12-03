@@ -11,7 +11,10 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
-  @Bind(R.id.toolbar) Toolbar toolbar;
+  /**
+   * The Toolbar used by the Android Support Library to implement the {@link android.app.ActionBar}
+   */
+  @Bind(R.id.toolbar) protected Toolbar toolbar;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
