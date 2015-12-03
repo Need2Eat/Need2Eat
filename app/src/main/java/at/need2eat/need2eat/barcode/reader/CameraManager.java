@@ -4,7 +4,7 @@ package at.need2eat.need2eat.barcode.reader;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 
-public class CameraManager {
+class CameraManager {
 
   private Camera camera;
 

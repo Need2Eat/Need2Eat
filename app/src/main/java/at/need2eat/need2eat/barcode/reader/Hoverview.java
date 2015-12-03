@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class Hoverview extends View {
+class Hoverview extends View {
 
   private Paint paint;
   private int left;
