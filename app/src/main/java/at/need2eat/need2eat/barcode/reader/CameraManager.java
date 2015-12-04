@@ -12,7 +12,7 @@ class CameraManager {
     this.camera = CameraManager.createCameraInstance();
   }
 
-  private static Camera createCameraInstance() throws RuntimeException {
+  private static Camera createCameraInstance() {
 
     int backId = 0;
     CameraInfo cameraInfo = new CameraInfo();
