@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Need2Eat</string>
-    <string name="api_key">21695344493be75568b4c42ef6b80d99</string>
+    <string name="api_key" translatable="false">21695344493be75568b4c42ef6b80d99</string>
 
     <string name="action_manual">Add a product manually</string>
+    <string name="expires_soon">%d days left</string>
 </resources>
