@@ -2,16 +2,45 @@ package at.need2eat.need2eat.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.media.Image;
 
+import org.json.JSONObject;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Tomi on 25.11.2015.
  */
 public class DatabaseHandler extends SQLiteOpenHelper {
+
+  /**
+   * In this method(the main-method) a try-catch block is given, which
+   * tries to connect to the internal database "n2e.db"(we don't have one,
+   * so we maybe have to create a new on) and if it succeeded, a message is been printed
+   * @param args
+   */
+  public static void main( String args[] )
+  {
+    Connection c = null;
+    try {
+      Class.forName("org.sqlite.JDBC");
+      /**
+       * n2e.db is our internal database(name)
+       */
+      c = DriverManager.getConnection("jdbc:sqlite:n2e.db");
+    } catch ( Exception e ) {
+      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+      System.exit(0);
+    }
+    System.out.println("Opened database successfully");
+  }
+
   private static final int DATABASE_VERSION = 1;
 
   // Database Name
@@ -28,9 +57,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   public static String KEY_EXPIRYDATE = "expiryDate";
 
   public DatabaseHandler(Context context) {
+
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
   }
 
+  SQLiteDatabase db;
   // Creating Tables
   public void onCreate(SQLiteDatabase db) {
     String CREATE_PRODUCTS_TABLE = "CREATE TABLE " + TABLE_PRODUCTS + "("
@@ -49,7 +80,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   }
   // Adding new contact
   public void addProduct(Product product) {
-    SQLiteDatabase db = this.getWritableDatabase();
+    db = this.getWritableDatabase();
 
     ContentValues values = new ContentValues();
     values.put(KEY_NAME, product.getName());
@@ -59,22 +90,44 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     db.close();
   }
 
-  // Getting single Product
-  public Product getProduct(int gtin) {
-  return null;
+  public Product getProduct(String gtin) {
+    /**
+     * Cursor: This interface provides random read-write access
+     * to the result set returned by a database query
+     *
+     * RawQuery: Runs the provided SQL and returns a Cursor over the result set
+     */
+
+    Cursor c = db.rawQuery("SELECT * FROM Products WHERE TRIM(gtin) = '"+gtin.trim()+"'", null);
+    if(c.moveToFirst()){
+      do{
+        gtin = c.getString(1);
+        String name = c.getString(0);
+        String expiryDate = c.getString(2);
+      }while(c.moveToNext());
+    }
+    c.close();
+    db.close();
+    return (Product) c;
   }
 
   // Getting All Products
-  public List<Product> getAllProducts() {
-    return null;
+  public Product getAllProducts(String name, String gtin, String expiryDate) {
+    Cursor cursor = db.rawQuery("SELECT * FROM Products", null);
+
+    if (cursor.moveToFirst()) { // data?
+      do{
+        name = cursor.getString(cursor.getColumnIndex("name"));
+        gtin = cursor.getString(cursor.getColumnIndex("gtin"));
+        expiryDate = cursor.getString(cursor.getColumnIndex("expiryDate"));
+      }while(cursor.moveToNext());
+    }
+    cursor.close();
+    db.close();
+    return (Product) cursor;
 
   }
 
-  // Getting Product Count
-  public int getProductsCount() {
-    return 1;
-
-  }
   // Updating single Product
   public int updateProduct(Product product) {
     return 1;
@@ -82,8 +135,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   }
 
   // Deleting single Product
-  public void deleteProduct(Product product) {
+  public void deleteProduct(String gtin) {
 
+    try {
+      db.execSQL("DELETE FROM Products where TRIM(gtin)="+gtin.trim());
+    } catch ( Exception e ) {
+      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+    }
+    System.out.println("Deleting of Product successfully");
   }
 }
 
