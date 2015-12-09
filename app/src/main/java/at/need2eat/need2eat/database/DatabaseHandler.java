@@ -20,27 +20,25 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
 
   /**
-   * In this method(the main-method) a try-catch block is given, which
-   * tries to connect to the internal database "n2e.db"(we don't have one,
-   * so we maybe have to create a new on) and if it succeeded, a message is been printed
-   * @param args
+   * This "openConnection"-Method creates a connection
+   * to our internal database
+   *
    */
-  public static void main( String args[] )
-  {
-    Connection c = null;
-    try {
-      Class.forName("org.sqlite.JDBC");
-      /**
-       * n2e.db is our internal database(name)
-       */
-      c = DriverManager.getConnection("jdbc:sqlite:n2e.db");
-    } catch ( Exception e ) {
-      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-      System.exit(0);
+    public void openConnection(){
+      Connection c = null;
+      try {
+        Class.forName("org.sqlite.JDBC");
+        /**
+         * n2e.db is our internal database(name)
+         * BUT WE DON'T HAVE ONE EITHERWAY
+         */
+        c = DriverManager.getConnection("jdbc:sqlite:n2e.db");
+      } catch ( Exception e ) {
+        System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+        System.exit(0);
+      }
+      System.out.println("Opened database successfully");
     }
-    System.out.println("Opened database successfully");
-  }
-
   private static final int DATABASE_VERSION = 1;
 
   // Database Name
@@ -129,9 +127,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   }
 
   // Updating single Product
-  public int updateProduct(Product product) {
-    return 1;
-
+  public void updateProduct(String gtin, String setGTIN, String setName, String setExpiryDate) {
+    try {
+      db.execSQL("UPDATE Product"
+          + "SET setGTIN = "+setGTIN+" ,setName = "+setName+" ,setExpiryDate = "+setExpiryDate
+          + " FROM Products where TRIM(gtin)=" + gtin.trim());
+    } catch (Exception e) {
+      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+    }
+    System.out.println("Updating of Product successfull");
   }
 
   // Deleting single Product
