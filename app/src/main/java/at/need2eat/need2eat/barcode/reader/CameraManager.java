@@ -4,7 +4,7 @@ package at.need2eat.need2eat.barcode.reader;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 
-public class CameraManager {
+class CameraManager {
 
   private Camera camera;
 
@@ -12,7 +12,7 @@ public class CameraManager {
     this.camera = CameraManager.createCameraInstance();
   }
 
-  private static Camera createCameraInstance() throws RuntimeException {
+  private static Camera createCameraInstance() {
 
     int backId = 0;
     CameraInfo cameraInfo = new CameraInfo();

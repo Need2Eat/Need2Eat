@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:gravity="center_vertical"
+    android:clickable="true"
+    android:background="?attr/selectableItemBackground">
+
+    <!--<ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:id="@+id/tmp_img"
+        android:layout_marginLeft="16dp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>-->
+    <at.need2eat.need2eat.view.IndicatorView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:id="@+id/indicator"
+        android:layout_marginLeft="16dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:id="@+id/productName"
+        android:layout_width="wrap_content"
+        android:textColor="@color/textPrimary"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="72dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center_vertical"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:fontFamily="sans-serif"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/expirationDate"
+        android:layout_width="wrap_content"
+        android:textColor="@color/textSecondary"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="72dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_vertical"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"/>
+
+</RelativeLayout>

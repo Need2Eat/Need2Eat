@@ -2,10 +2,10 @@ package at.need2eat.need2eat.barcode.reader;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -15,15 +15,19 @@ import com.google.zxing.MultiFormatReader;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.PlanarYUVLuminanceSource;
 import com.google.zxing.Result;
+import com.google.zxing.client.result.ExpandedProductParsedResult;
+import com.google.zxing.client.result.ExpandedProductResultParser;
 import com.google.zxing.common.HybridBinarizer;
 
 import java.io.IOException;
 
-public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
+import at.need2eat.need2eat.EditActivity;
+import at.need2eat.need2eat.LogUtils;
+
+class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
   private SurfaceHolder holder;
   private Camera camera;
-  private static final String TAG = "Camera";
   private int width;
   private int height;
   private MultiFormatReader reader;
@@ -32,9 +36,11 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
   private int areaWidth;
   private int areaHeight;
   private AlertDialog dialog;
+  private Context context;
 
   public CameraPreview(Context context, Camera camera) {
     super(context);
+    this.context = getContext();
     this.camera = camera;
     holder = getHolder();
     holder.addCallback(this);
@@ -48,7 +54,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     camera.setParameters(params);
 
     reader = new MultiFormatReader();
-    dialog = new AlertDialog.Builder(context).create();
   }
 
   @Override
@@ -57,10 +62,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
       camera.setPreviewDisplay(holder);
       camera.startPreview();
     } catch (IOException e) {
-      dialog.setTitle("Fehler!");
-      dialog.setMessage("Surface zur Vorschau-Anzeige nicht verfügbar!");
-      dialog.show();
-      Log.e(TAG, e.getMessage(), e);
+      dialog = LogUtils.logError(getContext(), getClass().getSimpleName(), "Surface zur Vorschau-Anzeige nicht verfügbar!", e);
     }
   }
 
@@ -73,10 +75,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         camera.setPreviewDisplay(holder);
         camera.startPreview();
       } catch (IOException e) {
-        dialog.setTitle("Fehler!");
-        dialog.setMessage("Surface zur Vorschau-Anzeige nicht verfügbar!");
-        dialog.show();
-        Log.e(TAG, e.getMessage(), e);
+        dialog = LogUtils.logError(getContext(), getClass().getSimpleName(), "Surface zur Vorschau-Anzeige nicht verfügbar!", e);
       }
 
     }
@@ -107,6 +106,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
   }
 
   private PreviewCallback callback = new PreviewCallback() {
+
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
       if (dialog.isShowing()) {
@@ -119,16 +119,19 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
       try {
         result = reader.decode(bitmap, null);
+
         if (result != null) {
-          /*
-            Insert code that handles the result of the barcode scanner
-           */
+          ExpandedProductResultParser parser = new ExpandedProductResultParser();
+          ExpandedProductParsedResult expandedResult = parser.parse(result);
+
+          Intent intent = new Intent(context, EditActivity.class);
+          intent.putExtra("GTIN", expandedResult.getProductID());
+          intent.putExtra("Expiration Date", expandedResult.getExpirationDate());
+          context.startActivity(intent);
         }
+
       } catch (NotFoundException e) {
-        dialog.setTitle("Keinen Barcode gefunden!");
-        dialog.setMessage("Stellen Sie sicher, dass der Barcode nicht abgedeckt ist!");
-        dialog.show();
-        Log.e(TAG, e.getMessage(), e);
+        dialog = LogUtils.logError(getContext(), getClass().getSimpleName(), "Stellen Sie sicher, dass der Barcode nicht abgedeckt ist!", e);
       }
     }
   };

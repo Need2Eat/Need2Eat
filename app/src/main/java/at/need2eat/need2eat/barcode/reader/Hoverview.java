@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class Hoverview extends View {
+class HoverView extends View {
 
   private Paint paint;
   private int left;
@@ -15,7 +15,7 @@ public class Hoverview extends View {
   private int top;
   private int bottom;
   
-  public Hoverview(Context context, AttributeSet attrs) {
+  public HoverView(Context context, AttributeSet attrs) {
     super(context, attrs);
     paint = new Paint();
     paint.setColor(Color.RED);
@@ -36,12 +36,8 @@ public class Hoverview extends View {
     return left;
   }
 
-  public int getHoverRight() {
-    return right;
-  }
-
-  public int getHoverAreaWidth() {
-    return right - left;
+  public int getHoverTop() {
+    return top;
   }
 
   @Override
