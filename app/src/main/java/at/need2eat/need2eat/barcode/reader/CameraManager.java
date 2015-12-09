@@ -4,14 +4,26 @@ package at.need2eat.need2eat.barcode.reader;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 
+/**
+ * The {@code CameraManager} class is used to create a new {@link Camera} as the back-camera of
+ * the device
+ * @author Maxi Nothnagel - mx.nothnagel@gmail.com
+ */
 class CameraManager {
 
-  private Camera camera;
+  private Camera camera = CameraManager.createCameraInstance();
 
+  /**
+   * Default constructor. The {@link Camera} is created by {@link #createCameraInstance()}
+   */
   public CameraManager() {
-    this.camera = CameraManager.createCameraInstance();
+
   }
 
+  /**
+   * Identifies the back-facing camera of the devices and opens a new connection to it (if possible)
+   * @return The new {@link Camera} object
+   */
   private static Camera createCameraInstance() {
 
     int backId = 0;
@@ -28,10 +40,17 @@ class CameraManager {
     return Camera.open(backId);
   }
 
+  /**
+   * Returns the {@link Camera} object of the {@code CameraManager}
+   * @return The {@code Camera} object
+   */
   public Camera getCamera() {
     return camera;
   }
 
+  /**
+   * Releases the camera in order to make it usable by other applications or activities
+   */
   private void releaseCamera() {
     if (camera != null) {
       camera.release();
@@ -39,10 +58,16 @@ class CameraManager {
     }
   }
 
+  /**
+   * Calls {@link #releaseCamera()} in order to release the camera when the activity is paused
+   */
   public void onPause() {
     releaseCamera();
   }
 
+  /**
+   * Creates a new connection to the back-facing camera when the activity is resumed
+   */
   public void onResume() {
     if (camera == null) {
       camera = createCameraInstance();
