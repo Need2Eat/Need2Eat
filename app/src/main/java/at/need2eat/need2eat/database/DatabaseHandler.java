@@ -7,12 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.media.Image;
 
-import org.json.JSONObject;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.ArrayList;
-import java.util.List;
+
+
+import at.need2eat.need2eat.Product;
 
 /**
  * Created by Tomi on 25.11.2015.
