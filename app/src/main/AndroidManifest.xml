@@ -29,6 +29,9 @@
         <activity android:name=".ProductActivity"
                   android:theme="@style/AppTheme.NoActionBar"/>
 
+        <activity android:name=".barcode.reader.ScannerActivity"
+                  android:theme="@style/AppTheme.NoActionBar"/>
+
         <meta-data
             android:name="api_key"
             android:value="@string/api_key"/>

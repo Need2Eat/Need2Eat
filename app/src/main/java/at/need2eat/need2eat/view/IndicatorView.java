@@ -64,9 +64,14 @@ public class IndicatorView extends View {
     textPaint.setColor(getColor(state.textColor));
     textPaint.setTextSize(50);
     textPaint.setTextAlign(Paint.Align.CENTER);
-    specs = new CircleSpecs(getWidth(), getHeight());
-    setUp = true;
-    invalidate();
+    post(new Runnable() {
+      @Override
+      public void run() {
+        specs = new CircleSpecs(getWidth(), getHeight());
+        setUp = true;
+        invalidate();
+      }
+    });
   }
 
   private void updateState(int number) {
