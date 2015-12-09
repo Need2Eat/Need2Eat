@@ -142,7 +142,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     } catch ( Exception e ) {
       System.err.println( e.getClass().getName() + ": " + e.getMessage() );
     }
-    System.out.println("Deleting of Product successfully");
+    System.out.println("Deleting of Product successfull");
   }
 }
 

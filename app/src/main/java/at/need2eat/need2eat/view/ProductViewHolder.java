@@ -16,6 +16,8 @@ public class ProductViewHolder extends RecyclerView.ViewHolder {
 
   @Bind(R.id.productName) protected TextView productNameView;
   @Bind(R.id.expirationDate) protected TextView expirationDateView;
+  @Bind(R.id.indicator) protected IndicatorView indicatorView;
+
   private Product product;
 
   public ProductViewHolder(final View itemView, final ProductClickListener clickListener) {
@@ -31,6 +33,7 @@ public class ProductViewHolder extends RecyclerView.ViewHolder {
 
   protected void setProduct(Product product) {
     this.product = product;
+    indicatorView.update(3);
     productNameView.setText(product.getName());
     expirationDateView.setText(product.getExpiryDate());
   }
