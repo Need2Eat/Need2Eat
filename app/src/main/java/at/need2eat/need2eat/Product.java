@@ -1,5 +1,7 @@
 package at.need2eat.need2eat;
 
+import org.json.JSONObject;
+
 /**
  * This class contains information about the product and a ID, which makes every product unique.
  * @author Sebastian Feistl
@@ -27,16 +29,14 @@ public class Product {
   private String expiryDate;
 
 
-  /**
-   * Constructs a new Product with a name and expiryDate
-   * @param name of the product
-   * @param expiryDate of the product
-   */
+  public Product(String gtin){
+    this.gtin = gtin;
+  }
+
   public Product(String name, String expiryDate) {
     this.name = name;
     this.expiryDate = expiryDate;
   }
-
   /**
    * Constructs a new Product with a barcode (GTIN) as String, a name and expiryDate
    * @param gtin is the barcode of the product

@@ -12,6 +12,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 
+import at.need2eat.need2eat.Product;
+
 /**
  * Created by Tomi on 18.11.2015.
  */
@@ -43,6 +45,7 @@ public class GetterOutpan {
    * @return
    */
   private JSONObject executeGet(String gtin) {
+
     return executeGet(gtin, "");
   }
 
@@ -88,24 +91,20 @@ public class GetterOutpan {
   /**
    * these methods get the name, the attributes and the images of this product;
    *
-   * @param barcode
+   * @param gtin
    * @return
    * @throws JSONException
    */
-  public OutpanObject getProduct(String barcode) throws JSONException {
-    return new OutpanObject(executeGet(barcode));
+  public Product getProduct(String gtin) throws JSONException {
+    return new Product(executeGet(gtin).toString());
   }
 
-  public OutpanObject getProductName(String barcode) throws JSONException{
-    return new OutpanObject(executeGet(barcode, "/name"));
+  public Product getProductName(String gtin) throws JSONException{
+    return new Product(executeGet(gtin, "/name").toString());
   }
 
-  public OutpanObject getProductAttributes(String barcode) throws JSONException{
-    return new OutpanObject(executeGet(barcode, "/attributes"));
-  }
-
-  public OutpanObject getProductImages(String barcode) throws JSONException{
-    return new OutpanObject(executeGet(barcode, "/images"));
+  public Product getProductAttributes(String gtin) throws JSONException{
+    return new Product(gtin,"Testproduct","02.12.2015");
   }
 
 }
