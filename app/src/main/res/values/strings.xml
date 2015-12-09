@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Need2Eat</string>
     <string name="api_key" translatable="false">21695344493be75568b4c42ef6b80d99</string>
+    <string name="extra_name" translatable="false">name</string>
+    <string name="extra_gtin" translatable="false">gtin</string>
+    <string name="extra_expiry" translatable="false">expiry_date</string>
 
     <string name="action_manual">Add a product manually</string>
     <string name="expires_soon">%d days left</string>
