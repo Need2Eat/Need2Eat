@@ -7,12 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.media.Image;
 
-import org.json.JSONObject;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.ArrayList;
-import java.util.List;
+
+
+import at.need2eat.need2eat.Product;
 
 /**
  * Created by Tomi on 25.11.2015.
@@ -22,7 +21,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   /**
    * This "openConnection"-Method creates a connection
    * to our internal database
-   *
    */
     public void openConnection(){
       Connection c = null;
@@ -44,11 +42,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   // Database Name
   private static final String DATABASE_NAME = "Products";
 
-  // Contacts table name
+  // Products table name
   private static final String TABLE_PRODUCTS = "products";
 
   private static Image image;
-  // Contacts Table Columns names
+  // Products Table Columns gtin, id, expiryDate
   private static final String KEY_GTIN = "gtin";
   public static int KEY_ID;
   public static String KEY_NAME = "name";
@@ -64,7 +62,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   public void onCreate(SQLiteDatabase db) {
     String CREATE_PRODUCTS_TABLE = "CREATE TABLE " + TABLE_PRODUCTS + "("
         + KEY_GTIN+ " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"+
-        KEY_EXPIRYDATE+"TEXT"+")";
+        KEY_EXPIRYDATE+"TEXT"+
+        KEY_ID+ " INT auto_increment"+")";
     db.execSQL(CREATE_PRODUCTS_TABLE);
   }
 
@@ -76,7 +75,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Create tables again
     onCreate(db);
   }
-  // Adding new contact
+  // Adding new product
   public void addProduct(Product product) {
     db = this.getWritableDatabase();
 
@@ -127,6 +126,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   }
 
   // Updating single Product
+
+  /**
+   * this method updates a Product with the new given values
+   *
+   * @param gtin
+   * @param setGTIN
+   * @param setName
+   * @param setExpiryDate
+   */
   public void updateProduct(String gtin, String setGTIN, String setName, String setExpiryDate) {
     try {
       db.execSQL("UPDATE Product"
