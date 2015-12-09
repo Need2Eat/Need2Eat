@@ -1,5 +1,6 @@
 package at.need2eat.need2eat.barcode.reader;
 
+import android.app.Activity;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,12 +9,23 @@ import android.widget.FrameLayout;
 
 import at.need2eat.need2eat.R;
 
+/**
+ * This class contains the interface of the {@code ScannerActivity} which is used to start the
+ * camera via a {@link CameraManager} that scans a barcode.
+ * @author Maxi Nothnagel - mx.nothnagel@gmail.com
+ */
 public class ScannerActivity extends AppCompatActivity {
 
   private CameraPreview camPreview;
   private CameraManager manager;
   private HoverView view;
 
+  /**
+   * Auto-generated function that initializes the layout of this class. Furthermore, it starts
+   * a {@link CameraManager} and adds a {@link CameraPreview} to the
+   * {@link android.hardware.Camera} in order to scan a barcode.
+   * @param savedInstanceState This {@link Bundle} contains the data it most recently supplied
+   */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -33,6 +45,10 @@ public class ScannerActivity extends AppCompatActivity {
     preview.addView(camPreview);
   }
 
+  /**
+   * Starts the {@link Activity#onPause()} method. Furthermore, it pauses the
+   * {@link CameraPreview} and the {@link CameraManager}
+   */
   @Override
   protected void onPause() {
     super.onPause();
@@ -40,6 +56,11 @@ public class ScannerActivity extends AppCompatActivity {
     manager.onPause();
   }
 
+  /**
+   * Starts the {@link Activity#onResume()} method. Furthermore, it resumes the
+   * {@link CameraPreview} and the {@link CameraManager} and it sets the
+   * {@link android.hardware.Camera} to the CameraManager
+   */
   @Override
   protected void onResume() {
     super.onResume();
