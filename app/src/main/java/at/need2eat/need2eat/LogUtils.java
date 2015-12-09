@@ -18,7 +18,7 @@ public class LogUtils {
    * @param tag Used to identify the source of the log message. It usually identifies the class or activity where the log occurs
    * @param msg The message you would like to log
    * @param ex The {@code Exception} that should be logged
-   * @return Returns the {@link AlertDialog} object that was used for logging the error
+   * @return The {@link AlertDialog} object that was used for logging the error
    */
   public static AlertDialog logError(Context context, String tag, String msg, Exception ex) {
     AlertDialog dialog = new AlertDialog.Builder(context).create();
