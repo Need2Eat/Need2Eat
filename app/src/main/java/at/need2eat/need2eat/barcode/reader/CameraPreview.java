@@ -203,6 +203,7 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
               expandedResult.getExpirationDate());
           intent.putExtra(resources.getString(R.string.extra_origin), ScannerActivity.class);
           context.startActivity(intent);
+          ((Activity) context).finish();
         }
 
       } catch (NotFoundException e) {
