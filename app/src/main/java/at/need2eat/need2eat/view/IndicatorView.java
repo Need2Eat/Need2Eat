@@ -96,10 +96,6 @@ public class IndicatorView extends View {
     return getResources().getInteger(resource);
   }
 
-  public boolean isSetUp() {
-    return setUp;
-  }
-
   @Override
   protected void onDraw(Canvas canvas) {
     if (!setUp) {
@@ -108,4 +104,5 @@ public class IndicatorView extends View {
     canvas.drawCircle(specs.cx, specs.cy, specs.radius, backgroundPaint);
     canvas.drawText(number.toString(), specs.cx, specs.cy + NUMBER_OFFSET, textPaint);
   }
+
 }
