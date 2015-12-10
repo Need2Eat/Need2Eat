@@ -43,6 +43,8 @@ public class IndicatorView extends View {
 
   }
 
+  private static final int NUMBER_OFFSET = 18;
+
   private Integer number = null;
   private IndicatorState state = IndicatorState.FINE;
   private boolean setUp = false;
@@ -104,6 +106,6 @@ public class IndicatorView extends View {
       return;
     }
     canvas.drawCircle(specs.cx, specs.cy, specs.radius, backgroundPaint);
-    canvas.drawText(number.toString(), specs.cx, specs.cy + 18, textPaint);
+    canvas.drawText(number.toString(), specs.cx, specs.cy + NUMBER_OFFSET, textPaint);
   }
 }
