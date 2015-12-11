@@ -16,7 +16,7 @@ import at.need2eat.need2eat.Product;
 /**
  * Created by Tomi on 25.11.2015.
  */
-public class DatabaseHandler extends SQLiteOpenHelper {
+public class DatabaseHandler extends SQLiteOpenHelper{
 
   /**
    * This "openConnection"-Method creates a connection

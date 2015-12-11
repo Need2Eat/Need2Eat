@@ -28,11 +28,11 @@ public class Product {
    */
   private String expiryDate;
 
-
-  public Product(String gtin){
-    this.gtin = gtin;
-  }
-
+  /**
+   * Constructs a new Product with the name of the Product as a string and the expiryDate
+   * @param name
+   * @param expiryDate
+   */
   public Product(String name, String expiryDate) {
     this.name = name;
     this.expiryDate = expiryDate;

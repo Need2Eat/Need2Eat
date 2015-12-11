@@ -18,7 +18,7 @@ import at.need2eat.need2eat.Product;
  * Created by Tomi on 18.11.2015.
  */
 
-public class GetterOutpan {
+public class OutpanManager implements OutpanHandler {
 
   /**
    * This is our api_key from the Outpan DB
@@ -32,7 +32,7 @@ public class GetterOutpan {
    *
    * @param api_key
    */
-  public GetterOutpan(String api_key) {
+  public OutpanManager(String api_key) {
     this.api_key = api_key;
   }
 
@@ -44,9 +44,9 @@ public class GetterOutpan {
    * @param gtin
    * @return
    */
-  private JSONObject executeGet(String gtin) {
+  private JSONObject executeGet(String gtin, String name) {
 
-    return executeGet(gtin, "");
+    return executeGet(gtin,name, "");
   }
 
   /**
@@ -58,8 +58,9 @@ public class GetterOutpan {
    * @param endpoint
    * @return
    */
-  private JSONObject executeGet(String gtin, String endpoint) {
+  private JSONObject executeGet(String gtin ,String name, String endpoint) {
     code = gtin;
+    name = name;
     JSONObject jsonResult = new JSONObject();
 
     try {
@@ -95,16 +96,22 @@ public class GetterOutpan {
    * @return
    * @throws JSONException
    */
-  public Product getProduct(String gtin) throws JSONException {
-    return new Product(executeGet(gtin).toString());
+  public Product getProduct(String gtin, String name) throws JSONException {
+    // return new Product(executeGet(gtin), name);
+    return null;
   }
 
-  public Product getProductName(String gtin) throws JSONException{
-    return new Product(executeGet(gtin, "/name").toString());
+  public Product getProductName(String gtin, String expiryDate) throws JSONException{
+    return new Product(executeGet(gtin, "/name").toString(), expiryDate);
   }
 
   public Product getProductAttributes(String gtin) throws JSONException{
     return new Product(gtin,"Testproduct","02.12.2015");
   }
 
+  @Override
+  public String select(String gtin) {
+    this.code = gtin;
+    return gtin;
+  }
 }
