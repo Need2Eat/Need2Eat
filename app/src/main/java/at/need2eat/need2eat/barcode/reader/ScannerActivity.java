@@ -1,12 +1,15 @@
 package at.need2eat.need2eat.barcode.reader;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.widget.FrameLayout;
 
+import at.need2eat.need2eat.LogUtils;
 import at.need2eat.need2eat.R;
 
 /**
@@ -37,7 +40,20 @@ public class ScannerActivity extends AppCompatActivity {
     display.getSize(size);
     view.update(size.x, size.y);
 
-    manager = new CameraManager();
+    try {
+      manager = new CameraManager();
+    } catch (RuntimeException e) {
+      final AlertDialog ALERT = LogUtils.logError(this, "ScannerActivity",
+          "Kamera ist nicht verfügbar! Eventuell andere Anwendungen schließen!", e);
+
+      ALERT.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+          ScannerActivity.this.finish();
+        }
+      });
+    }
+
     camPreview = new CameraPreview(this, manager.getCamera());
     camPreview.setArea(view.getHoverLeft(), view.getHoverTop(), size.x);
 
@@ -66,5 +82,16 @@ public class ScannerActivity extends AppCompatActivity {
     super.onResume();
     manager.onResume();
     camPreview.setCamera(manager.getCamera());
+  }
+
+  /**
+   * Starts the {@link Activity#onDestroy()} method. Furthermore, it releases the camera by
+   * calling {@link CameraManager#onPause()} and {@link CameraPreview#onPause()}
+   */
+  @Override
+  protected void onDestroy() {
+    manager.onPause();
+    camPreview.onPause();
+    super.onDestroy();
   }
 }
