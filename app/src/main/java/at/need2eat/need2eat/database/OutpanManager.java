@@ -25,6 +25,7 @@ public class OutpanManager implements OutpanHandler {
    */
   private String api_key = "21695344493be75568b4c42ef6b80d99";
   String code;
+  String name;
 
   /**
    * this Contructor sets this api key(see 'private string api_key') from our Outpan DB
@@ -60,7 +61,7 @@ public class OutpanManager implements OutpanHandler {
    */
   private JSONObject executeGet(String gtin ,String name, String endpoint) {
     code = gtin;
-    name = name;
+    this.name = name;
     JSONObject jsonResult = new JSONObject();
 
     try {
@@ -96,9 +97,10 @@ public class OutpanManager implements OutpanHandler {
    * @return
    * @throws JSONException
    */
-  public Product getProduct(String gtin, String name) throws JSONException {
-    // return new Product(executeGet(gtin), name);
-    return null;
+  public Product getProduct(String gtin, String name) {
+    this.code = gtin;
+    this.name = name;
+    return new Product(gtin,name);
   }
 
   public Product getProductName(String gtin, String expiryDate) throws JSONException{
@@ -109,8 +111,13 @@ public class OutpanManager implements OutpanHandler {
     return new Product(gtin,"Testproduct","02.12.2015");
   }
 
-  @Override
   public String select(String gtin) {
+    this.code = gtin;
+    return gtin;
+  }
+
+  @Override
+  public String getName(String gtin) {
     this.code = gtin;
     return gtin;
   }

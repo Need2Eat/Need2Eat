@@ -9,6 +9,11 @@ import android.media.Image;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ListIterator;
 
 
 import at.need2eat.need2eat.Product;
@@ -16,7 +21,7 @@ import at.need2eat.need2eat.Product;
 /**
  * Created by Tomi on 25.11.2015.
  */
-public class DatabaseHandler extends SQLiteOpenHelper{
+public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager{
 
   /**
    * This "openConnection"-Method creates a connection
@@ -75,6 +80,20 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     // Create tables again
     onCreate(db);
   }
+
+  @Override
+  public Product getProduct(int id) {
+    this.KEY_ID = id;
+    return new Product(id, KEY_GTIN, KEY_NAME, KEY_EXPIRYDATE);
+  }
+
+  @Override
+  public List<Product> getAllProducts() {
+    List<Product> list = new ArrayList<Product>();
+    list.add(new Product(KEY_GTIN,KEY_NAME,KEY_EXPIRYDATE));
+    return list;
+  }
+
   // Adding new product
   public void addProduct(Product product) {
     db = this.getWritableDatabase();
@@ -84,6 +103,25 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     // Inserting Row
     db.insert(TABLE_PRODUCTS, null, values);
+    db.close();
+  }
+
+  @Override
+  public void updateProduct(Product newProduct) {
+
+  }
+
+  @Override
+  public void deleteProduct(int id) {
+    Cursor c = db.rawQuery("DELETE * FROM Products WHERE id="+id, null);
+    if(c.moveToFirst()){
+      do{
+        id = Integer.parseInt(c.getString(1));
+        String name = c.getString(0);
+        String expiryDate = c.getString(2);
+      }while(c.moveToNext());
+    }
+    c.close();
     db.close();
   }
 
