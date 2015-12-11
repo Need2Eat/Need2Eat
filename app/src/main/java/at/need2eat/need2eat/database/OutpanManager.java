@@ -23,9 +23,9 @@ public class OutpanManager implements OutpanHandler {
   /**
    * This is our api_key from the Outpan DB
    */
-  private String api_key = "21695344493be75568b4c42ef6b80d99";
-  String code;
-  String name;
+  private static String api_key = "21695344493be75568b4c42ef6b80d99";
+  public static String code;
+  public static String name;
 
   /**
    * this Contructor sets this api key(see 'private string api_key') from our Outpan DB
@@ -45,7 +45,7 @@ public class OutpanManager implements OutpanHandler {
    * @param gtin
    * @return
    */
-  private JSONObject executeGet(String gtin, String name) {
+  private  static JSONObject executeGet(String gtin, String name) {
 
     return executeGet(gtin,name, "");
   }
@@ -59,9 +59,9 @@ public class OutpanManager implements OutpanHandler {
    * @param endpoint
    * @return
    */
-  private JSONObject executeGet(String gtin ,String name, String endpoint) {
+  private static JSONObject executeGet(String gtin ,String name, String endpoint) {
     code = gtin;
-    this.name = name;
+    name = name;
     JSONObject jsonResult = new JSONObject();
 
     try {
@@ -97,17 +97,17 @@ public class OutpanManager implements OutpanHandler {
    * @return
    * @throws JSONException
    */
-  public Product getProduct(String gtin, String name) {
-    this.code = gtin;
-    this.name = name;
+  public static Product getProduct(String gtin, String name) {
+    code = gtin;
+    name = name;
     return new Product(gtin,name);
   }
 
-  public Product getProductName(String gtin, String expiryDate) throws JSONException{
-    return new Product(executeGet(gtin, "/name").toString(), expiryDate);
+  public static Product getProductName(String gtin, String expiryDate) throws JSONException{
+    return new Product(executeGet("/name", gtin).toString(), expiryDate);
   }
 
-  public Product getProductAttributes(String gtin) throws JSONException{
+  public static Product getProductAttributes(String gtin) throws JSONException{
     return new Product(gtin,"Testproduct","02.12.2015");
   }
 

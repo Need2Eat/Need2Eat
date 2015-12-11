@@ -62,7 +62,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
   }
 
-  SQLiteDatabase db;
+  public static SQLiteDatabase db;
   // Creating Tables
   public void onCreate(SQLiteDatabase db) {
     String CREATE_PRODUCTS_TABLE = "CREATE TABLE " + TABLE_PRODUCTS + "("
@@ -81,9 +81,8 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
     onCreate(db);
   }
 
-  @Override
-  public Product getProduct(int id) {
-    this.KEY_ID = id;
+    public Product getProduct(int id) {
+    KEY_ID = id;
     return new Product(id, KEY_GTIN, KEY_NAME, KEY_EXPIRYDATE);
   }
 
@@ -125,7 +124,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
     db.close();
   }
 
-  public Product getProduct(String gtin) {
+  public static Product getProduct(String gtin) {
     /**
      * Cursor: This interface provides random read-write access
      * to the result set returned by a database query
@@ -147,7 +146,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   }
 
   // Getting All Products
-  public Product getAllProducts(String name, String gtin, String expiryDate) {
+  public static Product getAllProducts(String name, String gtin, String expiryDate) {
     Cursor cursor = db.rawQuery("SELECT * FROM Products", null);
 
     if (cursor.moveToFirst()) { // data?
