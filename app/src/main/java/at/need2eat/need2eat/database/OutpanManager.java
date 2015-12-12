@@ -18,13 +18,14 @@ import at.need2eat.need2eat.Product;
  * Created by Tomi on 18.11.2015.
  */
 
-public class GetterOutpan {
+public class OutpanManager implements OutpanHandler {
 
   /**
    * This is our api_key from the Outpan DB
    */
-  private String api_key = "21695344493be75568b4c42ef6b80d99";
-  String code;
+  private static String api_key = "21695344493be75568b4c42ef6b80d99";
+  public static String code;
+  public static String name;
 
   /**
    * this Contructor sets this api key(see 'private string api_key') from our Outpan DB
@@ -32,7 +33,7 @@ public class GetterOutpan {
    *
    * @param api_key
    */
-  public GetterOutpan(String api_key) {
+  public OutpanManager(String api_key) {
     this.api_key = api_key;
   }
 
@@ -44,9 +45,9 @@ public class GetterOutpan {
    * @param gtin
    * @return
    */
-  private JSONObject executeGet(String gtin) {
+  private  static JSONObject executeGet(String gtin, String name) {
 
-    return executeGet(gtin, "");
+    return executeGet(gtin,name, "");
   }
 
   /**
@@ -58,8 +59,9 @@ public class GetterOutpan {
    * @param endpoint
    * @return
    */
-  private JSONObject executeGet(String gtin, String endpoint) {
+  private static JSONObject executeGet(String gtin ,String name, String endpoint) {
     code = gtin;
+    name = name;
     JSONObject jsonResult = new JSONObject();
 
     try {
@@ -95,16 +97,28 @@ public class GetterOutpan {
    * @return
    * @throws JSONException
    */
-  public Product getProduct(String gtin) throws JSONException {
-    return new Product(executeGet(gtin).toString());
+  public static Product getProduct(String gtin, String name) {
+    code = gtin;
+    name = name;
+    return new Product(gtin,name);
   }
 
-  public Product getProductName(String gtin) throws JSONException{
-    return new Product(executeGet(gtin, "/name").toString());
+  public static Product getProductName(String gtin, String expiryDate) throws JSONException{
+    return new Product(executeGet("/name", gtin).toString(), expiryDate);
   }
 
-  public Product getProductAttributes(String gtin) throws JSONException{
+  public static Product getProductAttributes(String gtin) throws JSONException{
     return new Product(gtin,"Testproduct","02.12.2015");
   }
 
+  public String select(String gtin) {
+    this.code = gtin;
+    return gtin;
+  }
+
+  @Override
+  public String getName(String gtin) {
+    this.code = gtin;
+    return gtin;
+  }
 }

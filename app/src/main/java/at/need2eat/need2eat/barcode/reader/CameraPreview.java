@@ -1,7 +1,9 @@
 package at.need2eat.need2eat.barcode.reader;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.hardware.Camera;
@@ -87,6 +89,13 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     } catch (IOException e) {
       dialog = LogUtils.logError(getContext(), getClass().getSimpleName(),
           "Surface zur Vorschau-Anzeige nicht verfügbar!", e);
+
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+          ((Activity) CameraPreview.this.context).finish();
+        }
+      });
     }
   }
 
@@ -111,6 +120,13 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
       } catch (IOException e) {
         dialog = LogUtils.logError(getContext(), getClass().getSimpleName(),
             "Surface zur Vorschau-Anzeige nicht verfügbar!", e);
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+          @Override
+          public void onDismiss(DialogInterface dialog) {
+            ((Activity) CameraPreview.this.context).finish();
+          }
+        });
       }
 
     }
@@ -122,7 +138,7 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
    */
   @Override
   public void surfaceDestroyed(SurfaceHolder holder) {
-
+    onPause();
   }
 
   /**
@@ -185,7 +201,9 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
           intent.putExtra(resources.getString(R.string.extra_gtin), expandedResult.getProductID());
           intent.putExtra(resources.getString(R.string.extra_expiry),
               expandedResult.getExpirationDate());
+          intent.putExtra(resources.getString(R.string.extra_origin), ScannerActivity.class);
           context.startActivity(intent);
+          ((Activity) context).finish();
         }
 
       } catch (NotFoundException e) {
