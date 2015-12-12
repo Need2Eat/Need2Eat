@@ -23,7 +23,7 @@ public class DatabaseHandlerTest extends TestCase{
   @SmallTest
   public void testDatabaseHandler1(){
     Product p1 = DatabaseHandler.getProduct("5900190004954");
-    assertEquals("5900190004954",p1);
+    assertEquals("5900190004954",p1.getGTIN());
   }
   @SmallTest
   public void testDatabaseHandler2() throws JSONException {
@@ -34,10 +34,10 @@ public class DatabaseHandlerTest extends TestCase{
   @SmallTest
   public void testDatabaseHandler3() {
     Product p3 = DatabaseHandler.getProduct("1");
-    assertEquals("1",p3);
+    assertEquals("1",p3.getID());
   }
   @SmallTest
-  public void testDatabaseHandler4() throws  Exception{
+  public void testDatabaseHandler4(){
     //Product p4 = DatabaseHandler.getProductAttributes("0123456789");
     //assertEquals("0123456789",p4.toString());
   }
