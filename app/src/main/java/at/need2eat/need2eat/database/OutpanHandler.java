@@ -11,6 +11,6 @@ public interface OutpanHandler {
    * @param gtin the GTIN of the product
    * @return the name of the appropriate product received via the Outpan API
    */
-  //String getName(String gtin);
+  String getName(String gtin);
 
 }

@@ -37,7 +37,7 @@ public class OutpanManager implements OutpanHandler {
       this.api_key = api_key;
     }
 
-  public static String getName(String gtin) {
+  public String getName(String gtin) {
     code = gtin;
     String name = "";
     JSONObject jsonResult = new JSONObject();
