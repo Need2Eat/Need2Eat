@@ -32,20 +32,30 @@ public class OutpanManagerTest extends TestCase {
       assertEquals("5900190004954,KRAKUS", p1);
     }
     @SmallTest
-    public void testOutpanManager2() throws JSONException {
-      Product p2 = OutpanManager.getProductName("5900190004954", "22-04-2017");
+    public void testOutpanManager2() {
+      Product p2 = null;
+      try {
+        p2 = OutpanManager.getProductName("5900190004954", "22-04-2017");
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
       assertEquals("{gtin: 5900190004954,expiryDate: 22-04-2017}", p2);
     }
 
   @SmallTest
   public void testOutpanManager3() {
     Product p3 = OutpanManager.getProduct("0123456789", "Dunno");
-    assertEquals("0123456789",p3);
+    assertEquals("0123456789",p3.getName());
   }
   @SmallTest
-  public void testOutpanManager4() throws  Exception{
-    Product p4 = OutpanManager.getProductAttributes("0123456789");
-    assertEquals("0123456789",p4.toString());
+  public void testOutpanManager4() {
+    Product p4 = null;
+    try {
+      p4 = OutpanManager.getProductAttributes("0123456789");
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    assertEquals("0123456789",p4.getGTIN());
   }
 
 
