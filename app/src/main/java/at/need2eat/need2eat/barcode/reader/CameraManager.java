@@ -5,24 +5,26 @@ import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 
 /**
- * The {@code CameraManager} class is used to create a new {@link Camera} as the back-camera of
- * the device
+ * The {@code CameraManager} class is used to create a new {@link Camera} as the back-facing
+ * camera of the device
  * @author Maxi Nothnagel - mx.nothnagel@gmail.com
  */
 class CameraManager {
 
-  private Camera camera = CameraManager.createCameraInstance();
+  private Camera camera;
 
   /**
    * Default constructor. The {@link Camera} is created by {@link #createCameraInstance()}
    */
   public CameraManager() {
-
+    camera = CameraManager.createCameraInstance();
   }
 
   /**
-   * Identifies the back-facing camera of the devices and opens a new connection to it (if possible)
+   * Identifies the back-facing camera of the device and opens a new connection to it
    * @return The new {@link Camera} object
+   * @throws RuntimeException if opening the camera fails (for example, if the camera is in use
+   * by another process or device policy manager has disabled the camera).
    */
   private static Camera createCameraInstance() {
 
