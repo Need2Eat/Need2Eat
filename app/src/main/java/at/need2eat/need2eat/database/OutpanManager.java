@@ -33,35 +33,13 @@ public class OutpanManager implements OutpanHandler {
    *
    * @param api_key
    */
-  public OutpanManager(String api_key) {
-    this.api_key = api_key;
-  }
+    public OutpanManager(String api_key) {
+      this.api_key = api_key;
+    }
 
-  /**
-   * this method with the returning Value as a JSONObject
-   * it runs the method executeGet(see down below) with the gtin key,
-   * which is the "barcode", and parses into a string ""
-   *
-   * @param gtin
-   * @return
-   */
-  private  static JSONObject executeGet(String gtin, String name) {
-
-    return executeGet(gtin,name, "");
-  }
-
-  /**
-   * this private method executeGet does a try-do-connection to connect with
-   * the outpan DB with our api_key and the gtin string.
-   * Therefore, in case the connection fails, a ErrorException is placed to catch the Exception
-   *
-   * @param gtin
-   * @param endpoint
-   * @return
-   */
-  private static JSONObject executeGet(String gtin ,String name, String endpoint) {
+  public static String getName(String gtin) {
     code = gtin;
-    name = name;
+    String name = "";
     JSONObject jsonResult = new JSONObject();
 
     try {
@@ -79,6 +57,7 @@ public class OutpanManager implements OutpanHandler {
       StringBuffer sb = new StringBuffer();
 
       jsonResult = new JSONObject(sb.toString());
+      name = jsonResult.toString();
     } catch (MalformedURLException e) {
       e.printStackTrace();
     } catch (IOException e) {
@@ -87,38 +66,6 @@ public class OutpanManager implements OutpanHandler {
       e.printStackTrace();
     }
 
-    return jsonResult;
-  }
-
-  /**
-   * these methods get the name, the attributes and the images of this product;
-   *
-   * @param gtin
-   * @return
-   * @throws JSONException
-   */
-  public static Product getProduct(String gtin, String name) {
-    code = gtin;
-    name = name;
-    return new Product(gtin,name);
-  }
-
-  public static Product getProductName(String gtin, String expiryDate) throws JSONException{
-    return new Product(executeGet("/name", gtin).toString(), expiryDate);
-  }
-
-  public static Product getProductAttributes(String gtin) throws JSONException{
-    return new Product(gtin,"Testproduct","02.12.2015");
-  }
-
-  public String select(String gtin) {
-    this.code = gtin;
-    return gtin;
-  }
-
-  @Override
-  public String getName(String gtin) {
-    this.code = gtin;
-    return gtin;
+    return name;
   }
 }
