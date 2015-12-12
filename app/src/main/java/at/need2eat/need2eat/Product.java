@@ -1,6 +1,5 @@
 package at.need2eat.need2eat;
-
-import org.json.JSONObject;
+import java.util.Date;
 
 /**
  * This class contains information about the product and a ID, which makes every product unique.
@@ -8,32 +7,24 @@ import org.json.JSONObject;
  */
 public class Product {
 
-  /**
-   * ID (Primary Key) which identifies the product
-   */
+  /** ID (Primary Key) which identifies the product */
   private int id;
 
-  /**
-   * Product barcode
-   */
+  /** Product barcode */
   private String gtin;
 
-  /**
-   * Product name
-   */
+  /** Product name */
   private String name;
 
-  /**
-   * Expiry date of the product
-   */
-  private String expiryDate;
+  /** Expiry date of the product */
+  private Date expiryDate;
 
   /**
    * Constructs a new Product with the name of the Product as a string and the expiryDate
-   * @param name
-   * @param expiryDate
+   * @param name of the product
+   * @param expiryDate of the product
    */
-  public Product(String name, String expiryDate) {
+  public Product(String name, Date expiryDate) {
     this.name = name;
     this.expiryDate = expiryDate;
   }
@@ -43,7 +34,7 @@ public class Product {
    * @param name of the product
    * @param expiryDate of the product
    */
-  public Product(String gtin, String name, String expiryDate) {
+  public Product(String gtin, String name, Date expiryDate) {
     this.gtin = gtin;
     this.name = name;
     this.expiryDate = expiryDate;
@@ -56,7 +47,7 @@ public class Product {
    * @param name of the product
    * @param expiryDate of the product
    */
-  public Product(int id, String gtin, String name, String expiryDate) {
+  public Product(int id, String gtin, String name, Date expiryDate) {
     this.id = id;
     this.gtin = gtin;
     this.name = name;
@@ -115,7 +106,7 @@ public class Product {
    * Get the expiry date of the product
    * @return the expiry date of the product
    */
-  public String getExpiryDate() {
+  public Date getExpiryDate() {
     return this.expiryDate;
   }
 
@@ -123,7 +114,7 @@ public class Product {
    * Set the expiry date of the product
    * @param expiryDate the expiry date of the product
    */
-  public void setExpiryDate(String expiryDate) {
+  public void setExpiryDate(Date expiryDate) {
     this.expiryDate = expiryDate;
   }
 
