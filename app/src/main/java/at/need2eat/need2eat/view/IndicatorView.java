@@ -43,14 +43,13 @@ public class IndicatorView extends View {
 
   }
 
-  private static final int NUMBER_OFFSET = 18;
-
   private Integer number = null;
   private IndicatorState state = IndicatorState.FINE;
   private boolean setUp = false;
 
   private Paint backgroundPaint;
   private Paint textPaint;
+  private float textOffset;
   private CircleSpecs specs;
 
   public IndicatorView(Context context, AttributeSet attrs) {
@@ -64,12 +63,13 @@ public class IndicatorView extends View {
     textPaint = new Paint(backgroundPaint);
     backgroundPaint.setColor(getColor(state.backgroundColor));
     textPaint.setColor(getColor(state.textColor));
-    textPaint.setTextSize(50);
     textPaint.setTextAlign(Paint.Align.CENTER);
     post(new Runnable() {
       @Override
       public void run() {
         specs = new CircleSpecs(getWidth(), getHeight());
+        textPaint.setTextSize(getDimension(R.dimen.indicator_text_size));
+        textOffset = (getHeight() - textPaint.descent() - textPaint.ascent()) / 2;
         setUp = true;
         invalidate();
       }
@@ -96,13 +96,17 @@ public class IndicatorView extends View {
     return getResources().getInteger(resource);
   }
 
+  private int getDimension(int resource) {
+    return getResources().getDimensionPixelSize(resource);
+  }
+
   @Override
   protected void onDraw(Canvas canvas) {
     if (!setUp) {
       return;
     }
     canvas.drawCircle(specs.cx, specs.cy, specs.radius, backgroundPaint);
-    canvas.drawText(number.toString(), specs.cx, specs.cy + NUMBER_OFFSET, textPaint);
+    canvas.drawText(number.toString(), specs.cx, textOffset, textPaint);
   }
 
 }
