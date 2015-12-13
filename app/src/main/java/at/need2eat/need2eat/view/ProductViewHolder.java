@@ -23,7 +23,7 @@ public class ProductViewHolder extends RecyclerView.ViewHolder {
   @Bind(R.id.indicator) protected IndicatorView indicatorView;
 
   private static final Locale EXPIRY_DATE_LOCALE = Locale.GERMANY;
-  private static final String EXPIRY_DATE_FORMAT = "dd.mm.yyyy";
+  private static final String EXPIRY_DATE_FORMAT = "dd.MM.yyyy";
 
   private Product product;
 

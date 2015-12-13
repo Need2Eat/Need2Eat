@@ -52,11 +52,11 @@ public class MainActivity extends AppCompatActivity {
 
     //Add example Products to the RecyclerView
     List<Product> products = new ArrayList<>();
-    products.add(new Product("Milka Haselnuss Schokolade", new Date(2015, 12, 22)));
+    products.add(new Product("Milka Haselnuss Schokolade", new Date(115, 11, 22)));
     for (int i = 0; i < 10; i++) {
-      products.add(new Product("Tolles neues Produkt", new Date(2075, 1, 4)));
+      products.add(new Product("Tolles neues Produkt", new Date(175, 0, 4)));
     }
-    products.add(new Product("Test", new Date(2076, 6, 25)));
+    products.add(new Product("Test", new Date(176, 5, 25)));
 
     //Add an Adapter to the RecyclerView, which will bind data from our internal database to the GUI
     productView.setAdapter(new ProductAdapter(products, new ProductClickListener() {
