@@ -9,6 +9,9 @@ import android.media.Image;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,13 +25,13 @@ import at.need2eat.need2eat.Product;
  * Created by Tomi on 25.11.2015.
  */
 public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager{
+    static Connection c = null;
 
   /**
    * This "openConnection"-Method creates a connection
    * to our internal database
    */
     public void openConnection(){
-      Connection c = null;
       try {
         Class.forName("org.sqlite.JDBC");
         /**
@@ -124,41 +127,59 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
     db.close();
   }
 
-  public static Product getProduct(String gtin) {
+  public static Product getProduct(String gtin) throws SQLException {
+    
     /**
      * Cursor: This interface provides random read-write access
      * to the result set returned by a database query
      *
      * RawQuery: Runs the provided SQL and returns a Cursor over the result set
      */
-
-    Cursor c = db.rawQuery("SELECT * FROM Products WHERE TRIM(gtin) = '"+gtin.trim()+"'", null);
-    if(c.moveToFirst()){
-      do{
-        gtin = c.getString(1);
-        String name = c.getString(0);
-        String expiryDate = c.getString(2);
-      }while(c.moveToNext());
+    Product p1 = new Product(gtin,"","");
+    Statement stmt = null;
+    try {
+      stmt = c.createStatement();
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
-    c.close();
+    ResultSet rs = stmt.executeQuery("SELECT Lname FROM Customers WHERE Snum = 2001");
+
+    if(rs.first()){
+      do{
+        gtin = rs.getString(1);
+        String name = rs.getString(0);
+        String expiryDate = rs.getString(2);
+      }while(rs.next());
+    }
+    p1.setGTIN(rs.getString(0));
+    p1.setName(rs.getString(1));
+    p1.setExpiryDate(rs.getString(2));
     db.close();
-    return (Product) c;
+
+    return p1;
   }
 
   // Getting All Products
-  public static Product getAllProducts(String name, String gtin, String expiryDate) {
-    Cursor cursor = db.rawQuery("SELECT * FROM Products", null);
-
-    if (cursor.moveToFirst()) { // data?
-      do{
-        name = cursor.getString(cursor.getColumnIndex("name"));
-        gtin = cursor.getString(cursor.getColumnIndex("gtin"));
-        expiryDate = cursor.getString(cursor.getColumnIndex("expiryDate"));
-      }while(cursor.moveToNext());
+  public static Product getAllProducts(String name, String gtin, String expiryDate) throws SQLException {
+    Product p1 = new Product(name, gtin,expiryDate);
+    Statement stmt = null;
+    try {
+      stmt = c.createStatement();
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
-    cursor.close();
+    ResultSet rs = stmt.executeQuery("SELECT Lname FROM Customers WHERE Snum = 2001");
+
+    if (rs.first()) { // data?
+      do{
+        name = rs.getString(rs.getString("name"));
+        gtin = rs.getString(rs.getString("gtin"));
+        expiryDate = rs.getString(rs.getString("expiryDate"));
+      }while(rs.next());
+    }
+    rs.close();
     db.close();
-    return (Product) cursor;
+    return p1;
 
   }
 
