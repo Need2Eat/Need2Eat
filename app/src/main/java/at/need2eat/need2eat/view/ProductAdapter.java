@@ -28,7 +28,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
    * {@link ProductClickListener}.
    * @param products a list of products that are to be initially displayed
    * @param clickListener a listener that will be notified when a click on a
-   * {@link ProductViewHolder} occurs.
+   * {@link ProductViewHolder} occurs
    */
   public ProductAdapter(List<Product> products, ProductClickListener clickListener) {
     this.products = products;
