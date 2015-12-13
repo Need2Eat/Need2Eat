@@ -11,13 +11,25 @@ import at.need2eat.need2eat.Product;
 import at.need2eat.need2eat.R;
 
 /**
- * Created by AM307 on 05.12.2015.
+ * This class represents a link between a data source containing {@link Product}s and a
+ * {@link RecyclerView} in the GUI.
+ * @author AM307
  */
 public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
 
+  //List of all currently displayed Products
   private List<Product> products;
+
+  //Listener for clicks on ProductViewHolders in the GUI
   private ProductClickListener clickListener;
 
+  /**
+   * Initializes a new ProductAdapter with a given {@link List} of {@link Product}s and a
+   * {@link ProductClickListener}.
+   * @param products a list of products that are to be initially displayed
+   * @param clickListener a listener that will be notified when a click on a
+   * {@link ProductViewHolder} occurs.
+   */
   public ProductAdapter(List<Product> products, ProductClickListener clickListener) {
     this.products = products;
     this.clickListener = clickListener;
