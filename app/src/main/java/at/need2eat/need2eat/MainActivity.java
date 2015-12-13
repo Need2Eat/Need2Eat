@@ -10,12 +10,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Date;
-import java.util.Locale;
+import java.util.List;
 
 import at.need2eat.need2eat.view.ProductAdapter;
 import at.need2eat.need2eat.view.ProductClickListener;
@@ -55,14 +52,11 @@ public class MainActivity extends AppCompatActivity {
 
     //Add example Products to the RecyclerView
     List<Product> products = new ArrayList<>();
-    //products.add(new Product("Milka Haselnuss Schokolade", "12/22/2015"));    // original code
-    products.add(new Product("Milka Haselnuss Schokolade", createDateFromString("12.22.2015")));
+    products.add(new Product("Milka Haselnuss Schokolade", new Date(2015, 12, 22)));
     for (int i = 0; i < 10; i++) {
-      //products.add(new Product("Tolles neues Produkt", "99/99/2075"));        // original code
-      products.add(new Product("Tolles neues Produkt", createDateFromString("99.99.2075")));
+      products.add(new Product("Tolles neues Produkt", new Date(2075, 1, 4)));
     }
-    //products.add(new Product("Test", "89/99/2075"));                          // original code
-    products.add(new Product("Test", createDateFromString("89.99.2075")));
+    products.add(new Product("Test", new Date(2076, 6, 25)));
 
     //Add an Adapter to the RecyclerView, which will bind data from our internal database to the GUI
     productView.setAdapter(new ProductAdapter(products, new ProductClickListener() {
@@ -72,24 +66,6 @@ public class MainActivity extends AppCompatActivity {
       }
     }));
     productView.setLayoutManager(new LinearLayoutManager(this));
-  }
-
-  /**
-   * Converts a String to a date and throws an exception if the date is invalid.
-   *
-   * @param date is the expiry date as String which will be converted
-   * @return the date as java.util.Date
-   */
-  private Date createDateFromString(String date) {
-    Date d = null;
-    SimpleDateFormat dateformat = new SimpleDateFormat("dd.mm.yyyy", Locale.GERMANY);
-    try {
-      d = dateformat.parse(date);
-    }
-    catch (ParseException e){
-      // TODO: What to do when the date is invalid?
-    }
-    return d;
   }
 
   @Override
