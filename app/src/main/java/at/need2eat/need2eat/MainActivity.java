@@ -81,8 +81,6 @@ public class MainActivity extends AppCompatActivity {
       //Button to manually add a product
       case R.id.action_add:
         Intent intent = new Intent(this, EditActivity.class);
-        String extraKey = getResources().getString(R.string.extra_origin);
-        intent.putExtra(extraKey, MainActivity.class);
         startActivity(intent);
         return true;
       //Under normal circumstances, this block should never be reached
