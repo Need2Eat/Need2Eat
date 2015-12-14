@@ -43,13 +43,23 @@ public class ScannerActivity extends AppCompatActivity {
     try {
       manager = new CameraManager();
     } catch (RuntimeException e) {
-      final AlertDialog ALERT = LogUtils.logError(this, "ScannerActivity",
+      AlertDialog alert = LogUtils.logError(this, "ScannerActivity",
           "Kamera ist nicht verfügbar! Eventuell andere Anwendungen schließen!", e);
 
-      ALERT.setOnDismissListener(new DialogInterface.OnDismissListener() {
+      alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
         @Override
         public void onDismiss(DialogInterface dialog) {
-          ScannerActivity.this.finish();
+          finish();
+        }
+      });
+    } catch (CameraNotFoundException e) {
+      final AlertDialog alert = LogUtils.logError(this, "ScannerActivity",
+          "Ihr Handy ist nicht mit unserer Applikation kompatibel", e);
+
+      alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+          finish();
         }
       });
     }
@@ -80,7 +90,14 @@ public class ScannerActivity extends AppCompatActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    manager.onResume();
+    try {
+      manager.onResume();
+    } catch (CameraNotFoundException e) {
+      /*
+         This catch block should not be reachable as the CameraNotFoundException
+         is only thrown if the device has no cameras
+      */
+    }
     camPreview.setCamera(manager.getCamera());
   }
 
