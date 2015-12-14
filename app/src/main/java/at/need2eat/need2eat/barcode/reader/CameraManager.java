@@ -16,7 +16,7 @@ class CameraManager {
   /**
    * Default constructor. The {@link Camera} is created by {@link #createCameraInstance()}
    */
-  public CameraManager() throws CameraNotFoundException {
+  public CameraManager() throws CameraNotFoundException, CameraNotAccessibleException {
     camera = CameraManager.createCameraInstance();
   }
 
@@ -27,26 +27,34 @@ class CameraManager {
    * by another process or device policy manager has disabled the camera).
    * @throws CameraNotFoundException if no camera is available
    */
-  private static Camera createCameraInstance() throws CameraNotFoundException {
+  private static Camera createCameraInstance()
+      throws CameraNotFoundException, CameraNotAccessibleException {
 
-    CameraInfo cameraInfo = new CameraInfo();
-    int number = Camera.getNumberOfCameras();
+    int cameraId = 0;
+    try{
+      CameraInfo cameraInfo = new CameraInfo();
+      int number = Camera.getNumberOfCameras();
 
-    if(number == 0) {
+      if (number == 0) {
+        throw new CameraNotFoundException();
+      }
+
+      for (int i = 0; i < number; i++) {
+        Camera.getCameraInfo(i, cameraInfo);
+        cameraId = i;
+        if (cameraInfo.facing == CameraInfo.CAMERA_FACING_BACK) {
+          break;
+        }
+      }
+    } catch (Throwable e) {
       throw new CameraNotFoundException();
     }
 
-    int cameraId = 0;
-
-    for (int i = 0; i < number; i++) {
-      Camera.getCameraInfo(i, cameraInfo);
-      cameraId = i;
-      if (cameraInfo.facing == CameraInfo.CAMERA_FACING_BACK) {
-        break;
-      }
+    try {
+      return Camera.open(cameraId);
+    } catch (RuntimeException e) {
+      throw new CameraNotAccessibleException();
     }
-
-    return Camera.open(cameraId);
   }
 
   /**
@@ -78,7 +86,7 @@ class CameraManager {
    * Creates a new connection to the back-facing camera when the activity is resumed
    * @throws CameraNotFoundException if no camera is available
    */
-  public void onResume() throws CameraNotFoundException {
+  public void onResume() throws CameraNotFoundException, CameraNotAccessibleException {
     if (camera == null) {
       camera = createCameraInstance();
     }
