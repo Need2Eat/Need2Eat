@@ -14,10 +14,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import at.need2eat.need2eat.barcode.reader.ScannerActivity;
 import at.need2eat.need2eat.view.ProductAdapter;
 import at.need2eat.need2eat.view.ProductClickListener;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * This class represents the first Activity that is started after the user opened up the app.
@@ -87,6 +89,12 @@ public class MainActivity extends AppCompatActivity {
       default:
         return super.onOptionsItemSelected(item);
     }
+  }
+
+  @OnClick(R.id.fab)
+  public void onScanButtonClicked() {
+    Intent intent = new Intent(this, ScannerActivity.class);
+    startActivity(intent);
   }
 
 }
