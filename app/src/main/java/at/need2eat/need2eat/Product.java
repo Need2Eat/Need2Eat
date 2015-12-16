@@ -1,4 +1,5 @@
 package at.need2eat.need2eat;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -6,18 +7,32 @@ import java.util.concurrent.TimeUnit;
  * This class contains information about the product and a ID, which makes every product unique.
  * @author Sebastian Feistl
  */
-public class Product {
+public class Product implements Serializable {
 
-  /** ID (Primary Key) which identifies the product */
+  public static final long serialVersionUID = 142L;
+
+  /**
+   * ID (Primary Key) which identifies the product
+   * @serial unique id
+   */
   private int id;
 
-  /** Product barcode */
+  /**
+   * Product barcode
+   * @serial gtin string
+   */
   private String gtin;
 
-  /** Product name */
+  /**
+   * Product name
+   * @serial name string
+   */
   private String name;
 
-  /** Expiry date of the product */
+  /**
+   * Expiry date of the product
+   * @serial expiry date as date
+   */
   private Date expiryDate;
 
   /**
