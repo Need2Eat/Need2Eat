@@ -31,5 +31,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.2.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.google.zxing:core:3.2.1'
-    compile files('src/main/java/at/need2eat/need2eat/database/sqlite-jdbc-3.8.11.2.jar')
+    compile 'org.xerial:sqlite-jdbc:3.8.9.1'
 }

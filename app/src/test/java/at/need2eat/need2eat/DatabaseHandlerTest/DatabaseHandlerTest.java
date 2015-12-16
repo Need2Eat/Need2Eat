@@ -1,5 +1,8 @@
 package at.need2eat.need2eat.DatabaseHandlerTest;
 
+import android.content.Context;
+import android.provider.ContactsContract;
+import android.test.mock.MockContext;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import junit.framework.TestCase;
@@ -17,7 +20,7 @@ import at.need2eat.need2eat.database.OutpanManager;
  * Created by Tomi on 11.12.2015.
  */
 public class DatabaseHandlerTest extends TestCase{
-
+  DatabaseHandler db1 = new DatabaseHandler(new MockContext());
   @Override
   protected void setUp() throws Exception {
     super.setUp();
@@ -27,38 +30,34 @@ public class DatabaseHandlerTest extends TestCase{
   public void testDatabaseHandler1(){
     Product p1 = null;
     try {
-      p1 = DatabaseHandler.getProduct("5900190004954");
+      p1 = db1.getProduct("5900190004954");
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    assertEquals("5900190004954",p1.getGTIN());
+    assertEquals("5900190004954", p1.getGTIN());
   }
+
   @SmallTest
   public void testDatabaseHandler2() throws JSONException {
     Product p2 = null;
     try {
-      p2 = DatabaseHandler.getAllProducts("KRAKUS", "5900190004954", new Date("22-04-2017"));
+      p2 = db1.getAllProducts("KRAKUS", "5900190004954", new Date(2017, 04, 22));
     } catch (SQLException e) {
       e.printStackTrace();
     }
     assertEquals("{gtin: 5900190004954, name:KRAKUS, expiryDate: 22-04-2017}", p2);
   }
 
-  @SmallTest
-  public void testDatabaseHandler3() {
-    Product p3 = null;
-    try {
-      p3 = DatabaseHandler.getProduct("1");
-    } catch (SQLException e) {
-      e.printStackTrace();
+    @SmallTest
+    public void testDatabaseHandler3() {
+      Product p3 = null;
+      try {
+        p3 = db1.getProduct("1");
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+      assertEquals("1",p3.getID());
     }
-    assertEquals("1",p3.getID());
-  }
-  @SmallTest
-  public void testDatabaseHandler4(){
-    //Product p4 = DatabaseHandler.getProductAttributes("0123456789");
-    //assertEquals("0123456789",p4.toString());
-  }
 
 
   @Override
