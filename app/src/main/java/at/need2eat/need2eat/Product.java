@@ -119,9 +119,14 @@ public class Product {
     this.expiryDate = expiryDate;
   }
 
+  /**
+   * Gets the number of days until this Product's expiry.
+   * @return the rounded up difference between this Product's expiry date and the current time in
+   * days
+   */
   public int getDaysUntilExpiry() {
     long millis = expiryDate.getTime() - new Date().getTime();
-    return (int)(TimeUnit.DAYS.convert(millis, TimeUnit.MILLISECONDS));
+    return (int)(TimeUnit.DAYS.convert(millis, TimeUnit.MILLISECONDS)) + 1;
   }
 
 }
