@@ -79,8 +79,8 @@ public class ScannerActivity extends AppCompatActivity {
   @Override
   protected void onPause() {
     try {
-      manager.onPause();
       camPreview.onPause();
+      manager.onPause();
     } catch (RuntimeException e) {
       /*
       This catch block can be left empty as the exception will only get thrown whenever
@@ -120,8 +120,8 @@ public class ScannerActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     try{
-      manager.onPause();
       camPreview.onPause();
+      manager.onPause();
     } catch (RuntimeException e) {
       /*
       This catch block can be left empty as the exception will only get thrown whenever

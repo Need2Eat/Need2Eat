@@ -71,8 +71,11 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
         }
 
       } catch (NotFoundException e) {
-        dialog = LogUtils.logError(getContext(), getClass().getSimpleName(),
-            "Stellen Sie sicher, dass der Barcode nicht abgedeckt ist!", e);
+        /*
+         This catch block can be left empty as the reader constantly tries to decode the preview
+         until a decode-able barcode will be found. Therefor, the exception is caught in order to
+         keep the app running.
+          */
       }
     }
   }
@@ -105,8 +108,8 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
     Parameters params = camera.getParameters();
 
-    width = 640;
-    height = 480;
+    width = 480;
+    height = 640;
 
     params.setPreviewSize(width, height);
     camera.setParameters(params);
@@ -151,10 +154,10 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
   public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
     if (this.holder.getSurface() != null) {
       try {
-        camera.stopPreview();
+        // camera.stopPreview();
         camera.setPreviewCallback(new CameraCallback());
         camera.setPreviewDisplay(holder);
-        camera.startPreview();
+        // camera.startPreview();
       } catch (IOException e) {
         dialog = LogUtils.logError(getContext(), getClass().getSimpleName(),
             "Surface zur Vorschau-Anzeige nicht verfügbar!", e);
@@ -165,6 +168,8 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
             ((Activity) CameraPreview.this.context).finish();
           }
         });
+      } catch (Throwable e) {
+
       }
 
     }
@@ -193,8 +198,12 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
    */
   public void onPause() {
     if (camera != null) {
-      camera.setPreviewCallback(null);
-      camera.stopPreview();
+      try {
+        camera.setPreviewCallback(null);
+        camera.stopPreview();
+      } catch (Throwable e) {
+
+      }
     }
   }
 
