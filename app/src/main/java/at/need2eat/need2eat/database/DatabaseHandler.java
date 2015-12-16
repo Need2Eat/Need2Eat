@@ -32,12 +32,9 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
    * This "openConnection"-Method creates a connection
    * to our internal database
    */
-    public void openConnection(){
+    public static void openConnection(){
       try {
-        Class.forName("org.sqlite.JDBC");
-        /**
-         * Product is our internal database(name)
-         */
+        //Class.forName("org.sqlite.JDBC");
         c = DriverManager.getConnection("jdbc:sqlite:Product");
       } catch ( Exception e ) {
         System.err.println( e.getClass().getName() + ": " + e.getMessage() );
@@ -57,6 +54,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   // Products Table Columns gtin, id, expiryDate
   private static final String KEY_GTIN = "gtin";
   public static int KEY_ID;
+  public static String id = "id";
   public static String KEY_NAME = "name";
   public static Date KEY_EXPIRYDATE;
 
@@ -66,12 +64,13 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   }
 
   public static SQLiteDatabase db;
+
   // Creating Tables
   public void onCreate(SQLiteDatabase db) {
     String CREATE_PRODUCTS_TABLE = "CREATE TABLE " + TABLE_PRODUCTS + "("
         + KEY_GTIN+ " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"+
         KEY_EXPIRYDATE+"TEXT"+
-        KEY_ID+ " INT auto_increment"+")";
+        id+ " INT auto_increment"+")";
     db.execSQL(CREATE_PRODUCTS_TABLE);
   }
 
@@ -128,16 +127,15 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   }
 
   public static Product getProduct(String gtin) throws SQLException {
-
     /**
-     * Cursor: This interface provides random read-write access
-     * to the result set returned by a database query
      *
      * RawQuery: Runs the provided SQL
      */
     Product p1 = new Product(gtin,KEY_NAME,KEY_EXPIRYDATE);
     Statement stmt = null;
     try {
+      DatabaseHandler.openConnection();
+
       stmt = c.createStatement();
     } catch (SQLException e) {
       e.printStackTrace();
