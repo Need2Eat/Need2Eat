@@ -1,6 +1,7 @@
 package at.need2eat.need2eat.view;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
@@ -41,6 +42,29 @@ public class IndicatorView extends View {
       this.textColor = textColor;
       this.limit = limit;
     }
+
+    static IndicatorInfo fromNumber(int number, Resources resources) {
+      IndicatorState result = IndicatorState.FINE;
+      for (IndicatorState state : IndicatorState.values()) {
+        if (number <= resources.getInteger(state.limit)) {
+          result = state;
+          break;
+        }
+      }
+      return new IndicatorInfo(result, resources);
+    }
+  }
+
+  private static class IndicatorInfo {
+
+    private int backgroundColor;
+    private int textColor;
+
+    public IndicatorInfo(IndicatorState state, Resources resources) {
+      this.backgroundColor = resources.getColor(state.backgroundColor);
+      this.textColor = resources.getColor(state.textColor);
+    }
+
   }
 
   /**
@@ -85,12 +109,13 @@ public class IndicatorView extends View {
    * expires
    */
   public void update(int number) {
-    updateState(number);
+    this.number = number;
+    IndicatorInfo info = IndicatorState.fromNumber(number, getResources());
     backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     backgroundPaint.setStyle(Paint.Style.FILL);
     textPaint = new Paint(backgroundPaint);
-    backgroundPaint.setColor(getColor(state.backgroundColor));
-    textPaint.setColor(getColor(state.textColor));
+    backgroundPaint.setColor(info.backgroundColor);
+    textPaint.setColor(info.textColor);
     textPaint.setTextAlign(Paint.Align.CENTER);
     post(new Runnable() {
       @Override
@@ -102,42 +127,6 @@ public class IndicatorView extends View {
         invalidate();
       }
     });
-  }
-
-  /**
-   * Updates this IndicatorView's {@link at.need2eat.need2eat.view.IndicatorView.IndicatorState}
-   * according to the given number.
-   * @param number the number of days before the associated {@link at.need2eat.need2eat.Product}
-   * expires
-   */
-  private void updateState(int number) {
-    this.number = number;
-    IndicatorState newState = IndicatorState.FINE;
-    for (IndicatorState state : IndicatorState.values()) {
-      if (number <= getInteger(state.limit)) {
-        newState = state;
-        break;
-      }
-    }
-    state = newState;
-  }
-
-  /**
-   * Retrieves the color with the given resource ID from this View's resources.
-   * @param resource the resource ID of the color to retrieve
-   * @return the color from this View's resources as an 0xAARRGGBB integer
-   */
-  private int getColor(int resource) {
-    return getResources().getColor(resource);
-  }
-
-  /**
-   * Retrieves the integer with the given resource ID from this View's resources.
-   * @param resource the resource ID of the integer to retrieve
-   * @return the integer from this View's resources
-   */
-  private int getInteger(int resource) {
-    return getResources().getInteger(resource);
   }
 
   /**
