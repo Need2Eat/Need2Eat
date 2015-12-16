@@ -2,4 +2,5 @@
 <resources>
     <integer name="indicatorCritical">3</integer>
     <integer name="indicatorWarning">7</integer>
+    <integer name="indicatorFine">-1</integer>
 </resources>
