@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 import org.json.JSONException;
 
 import java.sql.SQLException;
+import java.util.Date;
 
 import at.need2eat.need2eat.Product;
 import at.need2eat.need2eat.database.DatabaseHandler;
@@ -36,7 +37,7 @@ public class DatabaseHandlerTest extends TestCase{
   public void testDatabaseHandler2() throws JSONException {
     Product p2 = null;
     try {
-      p2 = DatabaseHandler.getAllProducts("KRAKUS", "5900190004954", "22-04-2017");
+      p2 = DatabaseHandler.getAllProducts("KRAKUS", "5900190004954", new Date("22-04-2017"));
     } catch (SQLException e) {
       e.printStackTrace();
     }
