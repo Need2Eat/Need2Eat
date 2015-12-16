@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,10 +36,9 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
       try {
         Class.forName("org.sqlite.JDBC");
         /**
-         * n2e.db is our internal database(name)
-         * BUT WE DON'T HAVE ONE EITHERWAY
+         * Product is our internal database(name)
          */
-        c = DriverManager.getConnection("jdbc:sqlite:n2e.db");
+        c = DriverManager.getConnection("jdbc:sqlite:Product");
       } catch ( Exception e ) {
         System.err.println( e.getClass().getName() + ": " + e.getMessage() );
         System.exit(0);
@@ -48,17 +48,17 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   private static final int DATABASE_VERSION = 1;
 
   // Database Name
-  private static final String DATABASE_NAME = "Products";
+  private static final String DATABASE_NAME = "Product";
 
   // Products table name
-  private static final String TABLE_PRODUCTS = "products";
+  private static final String TABLE_PRODUCTS = "Product";
 
   private static Image image;
   // Products Table Columns gtin, id, expiryDate
   private static final String KEY_GTIN = "gtin";
   public static int KEY_ID;
   public static String KEY_NAME = "name";
-  public static String KEY_EXPIRYDATE = "expiryDate";
+  public static Date KEY_EXPIRYDATE;
 
   public DatabaseHandler(Context context) {
 
@@ -84,9 +84,9 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
     onCreate(db);
   }
 
-    public Product getProduct(int id) {
-    KEY_ID = id;
-    return new Product(id, KEY_GTIN, KEY_NAME, KEY_EXPIRYDATE);
+  @Override
+  public Product getProduct(int id) {
+    return new Product(id,KEY_GTIN,KEY_NAME, KEY_EXPIRYDATE);
   }
 
   @Override
@@ -128,21 +128,21 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   }
 
   public static Product getProduct(String gtin) throws SQLException {
-    
+
     /**
      * Cursor: This interface provides random read-write access
      * to the result set returned by a database query
      *
-     * RawQuery: Runs the provided SQL and returns a Cursor over the result set
+     * RawQuery: Runs the provided SQL
      */
-    Product p1 = new Product(gtin,"","");
+    Product p1 = new Product(gtin,KEY_NAME,KEY_EXPIRYDATE);
     Statement stmt = null;
     try {
       stmt = c.createStatement();
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    ResultSet rs = stmt.executeQuery("SELECT Lname FROM Customers WHERE Snum = 2001");
+    ResultSet rs = stmt.executeQuery("SELECT name FROM Product WHERE name = "+KEY_NAME);
 
     if(rs.first()){
       do{
@@ -153,14 +153,14 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
     }
     p1.setGTIN(rs.getString(0));
     p1.setName(rs.getString(1));
-    p1.setExpiryDate(rs.getString(2));
+    p1.setExpiryDate(rs.getDate(2));
     db.close();
 
     return p1;
   }
 
   // Getting All Products
-  public static Product getAllProducts(String name, String gtin, String expiryDate) throws SQLException {
+  public static Product getAllProducts(String name, String gtin, Date expiryDate) throws SQLException {
     Product p1 = new Product(name, gtin,expiryDate);
     Statement stmt = null;
     try {
@@ -174,7 +174,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
       do{
         name = rs.getString(rs.getString("name"));
         gtin = rs.getString(rs.getString("gtin"));
-        expiryDate = rs.getString(rs.getString("expiryDate"));
+        expiryDate = rs.getDate(String.valueOf(rs.getDate("expiryDate")));
       }while(rs.next());
     }
     rs.close();
