@@ -49,29 +49,34 @@ public class EditActivity extends AppCompatActivity {
     final String EXPIRY_DATE = resources.getString(R.string.extra_expiry);
     final String NAME = resources.getString(R.string.extra_name);
 
-    try {
-      id = bundle.getInt(resources.getString(R.string.extra_id));
-    } catch (Resources.NotFoundException e) {
-      id = 0;
-    }
-
-    if (bundle.getString(NAME) == null) {
-      bundle.putString(NAME,
-          new OutpanManager(resources.getString(R.string.api_key))
-              .getName(GTIN));
-    }
-
-    if (bundle.getString(EXPIRY_DATE) == null) {
-      date = null;
-    } else {
+    if (bundle != null) {
       try {
-        date = getDateFromString(bundle.getString(EXPIRY_DATE));
-      } catch (ParseException e) {
-        date = null;
+        id = bundle.getInt(resources.getString(R.string.extra_id));
+      } catch (Resources.NotFoundException e) {
+        id = 0;
       }
+
+      if (bundle.getString(NAME) == null) {
+        bundle.putString(NAME,
+            new OutpanManager(resources.getString(R.string.api_key))
+                .getName(GTIN));
+      }
+
+      if (bundle.getString(EXPIRY_DATE) == null) {
+        date = null;
+      } else {
+        try {
+          date = getDateFromString(bundle.getString(EXPIRY_DATE));
+        } catch (ParseException e) {
+          date = null;
+        }
+      }
+
+      setData(bundle.getString(NAME), bundle.getString(GTIN), date);
+    } else {
+      setData("", "", null);
     }
 
-    setData(bundle.getString(NAME), bundle.getString(GTIN), date);
     initializeLayout();
   }
 
@@ -107,8 +112,8 @@ public class EditActivity extends AppCompatActivity {
         }
 
         if (productname.equals("") || gtin.equals("") || date == null) {
-          LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(),
-              "Achtung!", "Bitte alle Felder ausfüllen!");
+          LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(), "Achtung!",
+              "Bitte alle Felder ausfüllen!");
         } else {
           DatabaseHandler handler = new DatabaseHandler(EditActivity.this);
           if (id == 0) {
@@ -124,7 +129,11 @@ public class EditActivity extends AppCompatActivity {
 
     PRODUCTNAME_EDIT.setText(productname);
     GTIN_EDIT.setText(gtin);
-    DATE_EDIT.setText(getStringFromDate(date));
+    try {
+      DATE_EDIT.setText(getStringFromDate(date));
+    } catch (IllegalArgumentException e) {
+      DATE_EDIT.setText("");
+    }
   }
 
   /**
@@ -144,7 +153,10 @@ public class EditActivity extends AppCompatActivity {
     return sdf.parse(expiryDate);
   }
 
-  private String getStringFromDate(Date expiryDate) {
+  private String getStringFromDate(Date expiryDate) throws IllegalArgumentException {
+    if (expiryDate == null) {
+      throw new IllegalArgumentException();
+    }
     SimpleDateFormat sdf = new SimpleDateFormat("dd.mm.yyyy", Locale.GERMANY);
     return sdf.format(expiryDate);
   }
