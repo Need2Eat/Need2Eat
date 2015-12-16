@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.media.Image;
+import android.provider.ContactsContract;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -57,6 +58,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   public static String id = "id";
   public static String KEY_NAME = "name";
   public static Date KEY_EXPIRYDATE;
+  public static String date = "expiryDate";
 
   public DatabaseHandler(Context context) {
 
@@ -69,11 +71,10 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   public void onCreate(SQLiteDatabase db) {
     String CREATE_PRODUCTS_TABLE = "CREATE TABLE " + TABLE_PRODUCTS + "("
         + KEY_GTIN+ " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"+
-        KEY_EXPIRYDATE+"TEXT"+
+        date+" DATE,"+
         id+ " INT auto_increment"+")";
     db.execSQL(CREATE_PRODUCTS_TABLE);
   }
-
   // Upgrading database
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     // Drop older table if existed
@@ -114,7 +115,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
 
   @Override
   public void deleteProduct(int id) {
-    Cursor c = db.rawQuery("DELETE * FROM Products WHERE id="+id, null);
+    Cursor c = db.rawQuery("DELETE * FROM Products WHERE id=" + id, null);
     if(c.moveToFirst()){
       do{
         id = Integer.parseInt(c.getString(1));
@@ -126,7 +127,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
     db.close();
   }
 
-  public static Product getProduct(String gtin) throws SQLException {
+  public Product getProduct(String gtin) throws SQLException {
     /**
      *
      * RawQuery: Runs the provided SQL
@@ -134,13 +135,13 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
     Product p1 = new Product(gtin,KEY_NAME,KEY_EXPIRYDATE);
     Statement stmt = null;
     try {
-      DatabaseHandler.openConnection();
-
+      openConnection();
+      onCreate(db);
       stmt = c.createStatement();
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    ResultSet rs = stmt.executeQuery("SELECT name FROM Product WHERE name = "+KEY_NAME);
+    ResultSet rs = stmt.executeQuery("SELECT name FROM Product WHERE gtin = "+gtin);
 
     if(rs.first()){
       do{
@@ -158,15 +159,17 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   }
 
   // Getting All Products
-  public static Product getAllProducts(String name, String gtin, Date expiryDate) throws SQLException {
+  public Product getAllProducts(String name, String gtin, Date expiryDate) throws SQLException {
     Product p1 = new Product(name, gtin,expiryDate);
     Statement stmt = null;
     try {
+      DatabaseHandler.openConnection();
+      onCreate(db);
       stmt = c.createStatement();
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    ResultSet rs = stmt.executeQuery("SELECT Lname FROM Customers WHERE Snum = 2001");
+    ResultSet rs = stmt.executeQuery("SELECT name FROM Product WHERE name = "+name);
 
     if (rs.first()) { // data?
       do{
