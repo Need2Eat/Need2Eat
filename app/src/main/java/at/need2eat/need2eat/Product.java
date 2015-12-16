@@ -1,5 +1,6 @@
 package at.need2eat.need2eat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class contains information about the product and a ID, which makes every product unique.
@@ -116,6 +117,11 @@ public class Product {
    */
   public void setExpiryDate(Date expiryDate) {
     this.expiryDate = expiryDate;
+  }
+
+  public long getDaysUntilExpiry() {
+    long millis = expiryDate.getTime() - new Date().getTime();
+    return TimeUnit.DAYS.convert(millis, TimeUnit.MILLISECONDS);
   }
 
 }

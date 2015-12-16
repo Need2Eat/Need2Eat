@@ -16,30 +16,45 @@ class CameraManager {
   /**
    * Default constructor. The {@link Camera} is created by {@link #createCameraInstance()}
    */
-  public CameraManager() {
+  public CameraManager() throws CameraNotFoundException, CameraNotAccessibleException {
     camera = CameraManager.createCameraInstance();
   }
 
   /**
-   * Identifies the back-facing camera of the device and opens a new connection to it
+   * Identifies the back-facing (or any other) camera of the device and opens a new connection to it
    * @return The new {@link Camera} object
    * @throws RuntimeException if opening the camera fails (for example, if the camera is in use
    * by another process or device policy manager has disabled the camera).
+   * @throws CameraNotFoundException if no camera is available
    */
-  private static Camera createCameraInstance() {
+  private static Camera createCameraInstance()
+      throws CameraNotFoundException, CameraNotAccessibleException {
 
-    int backId = 0;
-    CameraInfo cameraInfo = new CameraInfo();
-    int number = Camera.getNumberOfCameras();
+    int cameraId = 0;
+    try{
+      CameraInfo cameraInfo = new CameraInfo();
+      int number = Camera.getNumberOfCameras();
 
-    for (int i = 0; i < number; i++) {
-      Camera.getCameraInfo(i, cameraInfo);
-      if (cameraInfo.facing == CameraInfo.CAMERA_FACING_BACK) {
-        backId = i;
+      if (number == 0) {
+        throw new CameraNotFoundException();
       }
+
+      for (int i = 0; i < number; i++) {
+        Camera.getCameraInfo(i, cameraInfo);
+        cameraId = i;
+        if (cameraInfo.facing == CameraInfo.CAMERA_FACING_BACK) {
+          break;
+        }
+      }
+    } catch (Throwable e) {
+      throw new CameraNotFoundException();
     }
 
-    return Camera.open(backId);
+    try {
+      return Camera.open(cameraId);
+    } catch (RuntimeException e) {
+      throw new CameraNotAccessibleException();
+    }
   }
 
   /**
@@ -69,8 +84,9 @@ class CameraManager {
 
   /**
    * Creates a new connection to the back-facing camera when the activity is resumed
+   * @throws CameraNotFoundException if no camera is available
    */
-  public void onResume() {
+  public void onResume() throws CameraNotFoundException, CameraNotAccessibleException {
     if (camera == null) {
       camera = createCameraInstance();
     }
