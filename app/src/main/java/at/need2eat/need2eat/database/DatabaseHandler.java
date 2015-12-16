@@ -36,10 +36,9 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
       try {
         Class.forName("org.sqlite.JDBC");
         /**
-         * n2e.db is our internal database(name)
-         * BUT WE DON'T HAVE ONE EITHERWAY
+         * Product is our internal database(name)
          */
-        c = DriverManager.getConnection("jdbc:sqlite:n2e.db");
+        c = DriverManager.getConnection("jdbc:sqlite:Product");
       } catch ( Exception e ) {
         System.err.println( e.getClass().getName() + ": " + e.getMessage() );
         System.exit(0);
@@ -49,10 +48,10 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   private static final int DATABASE_VERSION = 1;
 
   // Database Name
-  private static final String DATABASE_NAME = "Products";
+  private static final String DATABASE_NAME = "Product";
 
   // Products table name
-  private static final String TABLE_PRODUCTS = "products";
+  private static final String TABLE_PRODUCTS = "Product";
 
   private static Image image;
   // Products Table Columns gtin, id, expiryDate
