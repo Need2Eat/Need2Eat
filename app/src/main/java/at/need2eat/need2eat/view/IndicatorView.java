@@ -25,7 +25,7 @@ public class IndicatorView extends View {
   private enum IndicatorState {
     CRITICAL(R.color.indicatorCritical, R.color.textPrimaryDark, R.integer.indicatorCritical),
     WARNING(R.color.indicatorWarning, R.color.textPrimary, R.integer.indicatorWarning),
-    FINE(R.color.indicatorFine, R.color.textPrimaryDark, -1);
+    FINE(R.color.indicatorFine, R.color.textPrimaryDark, R.integer.indicatorFine);
 
     private int backgroundColor;
     private int textColor;
@@ -86,12 +86,24 @@ public class IndicatorView extends View {
 
   }
 
+  /**
+   * This variable contains the last number that is displayed in an {@link IndicatorView}. Any
+   * number greater than this number will be displayed as this number with a plus sign suffix,
+   * e.g. "30+" if this constant has the value 30.
+   */
+  protected static final int NUMBER_DISPLAY_LIMIT = 30;
+
+  //The resource IDs for the size of the text in the circle
+  private static final int NORMAL_TEXT_SIZE = R.dimen.indicator_text_size;
+  private static final int SMALL_TEXT_SIZE = R.dimen.indicator_text_size_small;
+
   //These values represent the IndicatorView's current state and are displayed in the GUI
   private Integer number = null;
   private IndicatorState state = IndicatorState.FINE;
 
   //These values are used to determine where, when and how components will be drawn
   private boolean setUp = false;
+  private String displayText = null;
   private Paint backgroundPaint;
   private Paint textPaint;
   private float textOffset;
@@ -108,9 +120,18 @@ public class IndicatorView extends View {
    * @param number the number of days before the associated {@link at.need2eat.need2eat.Product}
    * expires
    */
-  public void update(int number) {
+  public void update(Integer number) {
     this.number = number;
-    IndicatorInfo info = IndicatorState.fromNumber(number, getResources());
+    final Resources resources = getResources();
+    final int textResource;
+    if (number <= NUMBER_DISPLAY_LIMIT) {
+      displayText = number.toString();
+      textResource = NORMAL_TEXT_SIZE;
+    } else {
+      displayText = NUMBER_DISPLAY_LIMIT + "+";
+      textResource = SMALL_TEXT_SIZE;
+    }
+    IndicatorInfo info = IndicatorState.fromNumber(number, resources);
     backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     backgroundPaint.setStyle(Paint.Style.FILL);
     textPaint = new Paint(backgroundPaint);
@@ -121,7 +142,7 @@ public class IndicatorView extends View {
       @Override
       public void run() {
         specs = new CircleSpecs(getWidth(), getHeight());
-        textPaint.setTextSize(getDimension(R.dimen.indicator_text_size));
+        textPaint.setTextSize(resources.getDimensionPixelSize(textResource));
         textOffset = (getHeight() - textPaint.descent() - textPaint.ascent()) / 2;
         setUp = true;
         invalidate();
@@ -144,7 +165,7 @@ public class IndicatorView extends View {
       return;
     }
     canvas.drawCircle(specs.cx, specs.cy, specs.radius, backgroundPaint);
-    canvas.drawText(number.toString(), specs.cx, textOffset, textPaint);
+    canvas.drawText(displayText, specs.cx, textOffset, textPaint);
   }
 
 }

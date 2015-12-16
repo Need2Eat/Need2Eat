@@ -39,6 +39,44 @@ import at.need2eat.need2eat.R;
  */
 class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
+  private class CameraCallback implements PreviewCallback {
+
+    @Override
+    public void onPreviewFrame(byte[] data, Camera camera) {
+      if (dialog != null && dialog.isShowing()) {
+        return;
+      }
+
+      LuminanceSource source =
+          new PlanarYUVLuminanceSource(data, width, height, left, top,
+              areaWidth, areaHeight, false);
+      BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+      Result result;
+
+      try {
+        result = reader.decode(bitmap, null);
+
+        if (result != null) {
+          ExpandedProductResultParser parser = new ExpandedProductResultParser();
+          ExpandedProductParsedResult expandedResult = parser.parse(result);
+
+          Resources resources = getResources();
+
+          Intent intent = new Intent(context, EditActivity.class);
+          intent.putExtra(resources.getString(R.string.extra_gtin), expandedResult.getProductID());
+          intent.putExtra(resources.getString(R.string.extra_expiry),
+              expandedResult.getExpirationDate());
+          context.startActivity(intent);
+          ((Activity) context).finish();
+        }
+
+      } catch (NotFoundException e) {
+        dialog = LogUtils.logError(getContext(), getClass().getSimpleName(),
+            "Stellen Sie sicher, dass der Barcode nicht abgedeckt ist!", e);
+      }
+    }
+  }
+
   private SurfaceHolder holder;
   private Camera camera;
   private int width;
@@ -114,7 +152,7 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     if (this.holder.getSurface() != null) {
       try {
         camera.stopPreview();
-        camera.setPreviewCallback(callback);
+        camera.setPreviewCallback(new CameraCallback());
         camera.setPreviewDisplay(holder);
         camera.startPreview();
       } catch (IOException e) {
@@ -173,42 +211,4 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     this.areaWidth = this.width - this.left * 2;
     this.areaHeight = this.width - this.left * 2;
   }
-
-  private PreviewCallback callback = new PreviewCallback() {
-
-    @Override
-    public void onPreviewFrame(byte[] data, Camera camera) {
-      if (dialog.isShowing()) {
-        return;
-      }
-
-      LuminanceSource source =
-          new PlanarYUVLuminanceSource(data, width, height, left, top,
-              areaWidth, areaHeight, false);
-      BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-      Result result;
-
-      try {
-        result = reader.decode(bitmap, null);
-
-        if (result != null) {
-          ExpandedProductResultParser parser = new ExpandedProductResultParser();
-          ExpandedProductParsedResult expandedResult = parser.parse(result);
-
-          Resources resources = getResources();
-
-          Intent intent = new Intent(context, EditActivity.class);
-          intent.putExtra(resources.getString(R.string.extra_gtin), expandedResult.getProductID());
-          intent.putExtra(resources.getString(R.string.extra_expiry),
-              expandedResult.getExpirationDate());
-          context.startActivity(intent);
-          ((Activity) context).finish();
-        }
-
-      } catch (NotFoundException e) {
-        dialog = LogUtils.logError(getContext(), getClass().getSimpleName(),
-            "Stellen Sie sicher, dass der Barcode nicht abgedeckt ist!", e);
-      }
-    }
-  };
 }
