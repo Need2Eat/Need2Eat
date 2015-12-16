@@ -2,6 +2,7 @@ package at.need2eat.need2eat;
 
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
@@ -36,6 +37,23 @@ public class LogUtils {
     });
     dialog.show();
     Log.e(tag, ex.getMessage(), ex);
+
+    return dialog;
+  }
+  
+  public static AlertDialog logInformation(Context context, String tag, String title, String msg) {
+    AlertDialog dialog = new AlertDialog.Builder(context).create();
+    dialog.setTitle(title);
+    dialog.setMessage(msg);
+    dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Okay",
+        new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+          }
+        });
+    dialog.show();
+    Log.i(tag, msg);
 
     return dialog;
   }
