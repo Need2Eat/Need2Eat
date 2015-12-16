@@ -3,6 +3,7 @@ package at.need2eat.need2eat;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 
 /**
@@ -26,6 +27,13 @@ public class LogUtils {
     AlertDialog dialog = new AlertDialog.Builder(context).create();
     dialog.setTitle("Fehler!");
     dialog.setMessage(msg);
+    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Okay",
+        new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+          }
+    });
     dialog.show();
     Log.e(tag, ex.getMessage(), ex);
 

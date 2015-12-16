@@ -42,23 +42,34 @@ public class ScannerActivity extends AppCompatActivity {
 
     try {
       manager = new CameraManager();
-    } catch (RuntimeException e) {
-      final AlertDialog ALERT = LogUtils.logError(this, "ScannerActivity",
-          "Kamera ist nicht verfügbar! Eventuell andere Anwendungen schließen!", e);
+      camPreview = new CameraPreview(this, manager.getCamera());
+      camPreview.setArea(view.getHoverLeft(), view.getHoverTop(), size.x);
 
-      ALERT.setOnDismissListener(new DialogInterface.OnDismissListener() {
+      FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+      preview.addView(camPreview);
+    }  catch (CameraNotFoundException e) {
+      AlertDialog alert = LogUtils.logError(this, "ScannerActivity",
+          "Ihr Handy ist nicht mit unserem Barcode-Scanner kompatibel, da es keine Kamera besitzt!",
+          e);
+
+      alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
         @Override
         public void onDismiss(DialogInterface dialog) {
-          ScannerActivity.this.finish();
+          finish();
+        }
+      });
+    } catch (CameraNotAccessibleException e) {
+      AlertDialog alert = LogUtils.logError(this, "ScannerActivity",
+          "Kamera ist nicht verfügbar! Eventuell andere Anwendungen schließen!", e);
+
+      alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+          finish();
         }
       });
     }
 
-    camPreview = new CameraPreview(this, manager.getCamera());
-    camPreview.setArea(view.getHoverLeft(), view.getHoverTop(), size.x);
-
-    FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-    preview.addView(camPreview);
   }
 
   /**
@@ -67,9 +78,18 @@ public class ScannerActivity extends AppCompatActivity {
    */
   @Override
   protected void onPause() {
+    try {
+      manager.onPause();
+      camPreview.onPause();
+    } catch (RuntimeException e) {
+      /*
+      This catch block can be left empty as the exception will only get thrown whenever
+      a camera device is not available or non-existing. In this case an alert dialog is shown
+      that finishes the activity as soon as it gets dismissed. Therefor, the manager does not need
+      to get paused.
+       */
+    }
     super.onPause();
-    camPreview.onPause();
-    manager.onPause();
   }
 
   /**
@@ -80,8 +100,17 @@ public class ScannerActivity extends AppCompatActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    manager.onResume();
-    camPreview.setCamera(manager.getCamera());
+    try {
+      manager.onResume();
+      camPreview.setCamera(manager.getCamera());
+    } catch (CameraNotFoundException | CameraNotAccessibleException | NullPointerException e) {
+      /*
+      This catch block can be left empty as the exception will only get thrown whenever
+      a camera device is not available or non-existing. In this case an alert dialog is shown
+      that finishes the activity as soon as it gets dismissed. Therefor, the manager does not need
+      to get paused.
+      */
+    }
   }
 
   /**
@@ -90,8 +119,17 @@ public class ScannerActivity extends AppCompatActivity {
    */
   @Override
   protected void onDestroy() {
-    manager.onPause();
-    camPreview.onPause();
+    try{
+      manager.onPause();
+      camPreview.onPause();
+    } catch (RuntimeException e) {
+      /*
+      This catch block can be left empty as the exception will only get thrown whenever
+      a camera device is not available or non-existing. In this case an alert dialog is shown
+      that finishes the activity as soon as it gets dismissed. Therefor, the manager does not need
+      to get paused.
+      */
+    }
     super.onDestroy();
   }
 }
