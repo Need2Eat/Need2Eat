@@ -57,7 +57,7 @@ public class ProductViewHolder extends RecyclerView.ViewHolder {
    */
   protected void setProduct(Product product) {
     this.product = product;
-    indicatorView.update(3);
+    indicatorView.update(product.getDaysUntilExpiry());
     productNameView.setText(product.getName());
     String expiryDate = getDateStringLocale(product.getExpiryDate());
     expirationDateView.setText(expiryDate);
