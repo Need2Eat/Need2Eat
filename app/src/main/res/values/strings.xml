@@ -5,6 +5,7 @@
     <string name="extra_gtin" translatable="false">gtin</string>
     <string name="extra_expiry" translatable="false">expiry_date</string>
     <string name="extra_id" translatable="false">extra_id</string>
+    <string name="extra_product" translatable="false">product</string>
 
     <string name="action_manual">Add a product manually</string>
     <string name="expires_soon">%d days left</string>
