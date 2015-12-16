@@ -29,6 +29,17 @@ import butterknife.OnClick;
  */
 public class MainActivity extends AppCompatActivity {
 
+  private class MainClickListener implements ProductClickListener {
+
+    @Override
+    public void onItemClick(Product product) {
+      Intent intent = new Intent(MainActivity.this, ProductActivity.class);
+      intent.putExtra("TEST", product);
+      startActivity(intent);
+    }
+
+  }
+
   /**
    * The Toolbar used by the Android Support Library to implement an {@link android.app.ActionBar}.
    * This element is automatically injected by ButterKnife in the {@link #onCreate(Bundle)} method.
@@ -61,12 +72,7 @@ public class MainActivity extends AppCompatActivity {
     products.add(new Product("Test", new Date(176, 5, 25)));
 
     //Add an Adapter to the RecyclerView, which will bind data from our internal database to the GUI
-    productView.setAdapter(new ProductAdapter(products, new ProductClickListener() {
-      @Override
-      public void onItemClick(Product product) {
-        System.out.println(product);
-      }
-    }));
+    productView.setAdapter(new ProductAdapter(products, new MainClickListener()));
     productView.setLayoutManager(new LinearLayoutManager(this));
   }
 
