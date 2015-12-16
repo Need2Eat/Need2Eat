@@ -57,17 +57,17 @@ public class ProductViewHolder extends RecyclerView.ViewHolder {
    */
   protected void setProduct(Product product) {
     this.product = product;
-    indicatorView.update(3);
+    indicatorView.update(product.getDaysUntilExpiry());
     productNameView.setText(product.getName());
     String expiryDate = getDateStringLocale(product.getExpiryDate());
     expirationDateView.setText(expiryDate);
   }
 
   /**
-   * Formats the given Date using the set constants {@link #EXPIRY_DATE_FORMAT} and
+   * Formats the given {@link Date} using the set constants {@link #EXPIRY_DATE_FORMAT} and
    * {@link #EXPIRY_DATE_LOCALE} from this class.
-   * @param date
-   * @return
+   * @param date the Date to be formatted
+   * @return the localized date as a {@code String}
    */
   private String getDateStringLocale(Date date) {
     SimpleDateFormat dateFormat = new SimpleDateFormat(EXPIRY_DATE_FORMAT, EXPIRY_DATE_LOCALE);

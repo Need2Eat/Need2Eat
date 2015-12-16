@@ -119,9 +119,9 @@ public class Product {
     this.expiryDate = expiryDate;
   }
 
-  public long getDaysUntilExpiry() {
+  public int getDaysUntilExpiry() {
     long millis = expiryDate.getTime() - new Date().getTime();
-    return TimeUnit.DAYS.convert(millis, TimeUnit.MILLISECONDS);
+    return (int)(TimeUnit.DAYS.convert(millis, TimeUnit.MILLISECONDS));
   }
 
 }
