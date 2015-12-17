@@ -8,10 +8,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
+import at.need2eat.need2eat.util.DateConverter;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -98,8 +97,6 @@ public class ProductActivity extends AppCompatActivity {
    * @param expiryDate of the product as java.util.Date
    */
   private void setTextviewAblauf(Date expiryDate){
-    SimpleDateFormat sdf = new SimpleDateFormat("dd.mm.yyyy", Locale.GERMANY);
-    textviewAblauf.setText(sdf.format(expiryDate));
-
+    textviewAblauf.setText(DateConverter.getStringFromDate(expiryDate));
   }
 }
