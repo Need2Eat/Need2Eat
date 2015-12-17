@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.widget.FrameLayout;
 
-import at.need2eat.need2eat.LogUtils;
+import at.need2eat.need2eat.util.LogUtils;
 import at.need2eat.need2eat.R;
 
 /**

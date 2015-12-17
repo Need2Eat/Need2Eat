@@ -14,6 +14,7 @@ import java.util.Locale;
 
 import at.need2eat.need2eat.database.DatabaseHandler;
 import at.need2eat.need2eat.database.OutpanManager;
+import at.need2eat.need2eat.util.LogUtils;
 
 /**
  * This class contains the interface of the EditActivity, which allows the user to edit

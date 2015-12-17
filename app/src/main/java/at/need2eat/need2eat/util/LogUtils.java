@@ -1,4 +1,4 @@
-package at.need2eat.need2eat;
+package at.need2eat.need2eat.util;
 
 
 import android.app.AlertDialog;

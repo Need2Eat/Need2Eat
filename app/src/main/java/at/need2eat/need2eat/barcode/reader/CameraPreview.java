@@ -25,7 +25,7 @@ import com.google.zxing.common.HybridBinarizer;
 import java.io.IOException;
 
 import at.need2eat.need2eat.EditActivity;
-import at.need2eat.need2eat.LogUtils;
+import at.need2eat.need2eat.util.LogUtils;
 import at.need2eat.need2eat.R;
 
 /**
