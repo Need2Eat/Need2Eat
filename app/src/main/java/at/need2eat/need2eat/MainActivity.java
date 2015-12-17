@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onItemClick(Product product) {
       Intent intent = new Intent(MainActivity.this, ProductActivity.class);
-      intent.putExtra("TEST", product);
+      intent.putExtra(getResources().getString(R.string.extra_product), product);
       startActivity(intent);
     }
 
@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     //Add example Products to the RecyclerView
     List<Product> products = new ArrayList<>();
     products.add(new Product("Milka Haselnuss Schokolade", new Date(115, 11, 22)));
+    products.add(new Product("Milka Haselnuss Schokolade", new Date(115, 11, 31)));
     for (int i = 0; i < 10; i++) {
       products.add(new Product("Tolles neues Produkt", new Date(175, 0, 4)));
     }
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
       case R.id.action_add:
         Intent intent = new Intent(this, EditActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         return true;
       //Under normal circumstances, this block should never be reached
       default:
@@ -101,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
   public void onScanButtonClicked() {
     Intent intent = new Intent(this, ScannerActivity.class);
     startActivity(intent);
+    overridePendingTransition(R.anim.fab_in, R.anim.hold);
   }
 
 }
