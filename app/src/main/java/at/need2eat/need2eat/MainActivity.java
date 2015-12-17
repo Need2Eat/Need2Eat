@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onItemClick(Product product) {
       Intent intent = new Intent(MainActivity.this, ProductActivity.class);
-      intent.putExtra("TEST", product);
+      intent.putExtra(getResources().getString(R.string.extra_product), product);
       startActivity(intent);
     }
 
