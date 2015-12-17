@@ -2,14 +2,12 @@ package at.need2eat.need2eat.util;
 
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
 
 /**
  * This is a utility class providing simple error logging functionality
- *
  * @author Maxi Nothnagel - mx.nothnagel@gmail.com
  */
 public class LogUtils {
@@ -40,7 +38,16 @@ public class LogUtils {
 
     return dialog;
   }
-  
+
+  /**
+   * Create a new {@code AlertDialog} that provides information for the user
+   * @param context The {@link Context} the {@code View} and the {@code AlertDialog} are running in
+   * @param tag Used to identify the source of the log message. It usually identifies the class or
+   * activity where the log occurs
+   * @param title The title displayed in the dialog
+   * @param msg The message you would like to log
+   * @return The {@link AlertDialog} object that was used for logging the information
+   */
   public static AlertDialog logInformation(Context context, String tag, String title, String msg) {
     AlertDialog dialog = new AlertDialog.Builder(context).create();
     dialog.setTitle(title);
