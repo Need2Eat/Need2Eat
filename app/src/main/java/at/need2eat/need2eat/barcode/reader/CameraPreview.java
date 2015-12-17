@@ -23,8 +23,12 @@ import com.google.zxing.client.result.ExpandedProductResultParser;
 import com.google.zxing.common.HybridBinarizer;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
 
 import at.need2eat.need2eat.EditActivity;
+import at.need2eat.need2eat.Product;
+import at.need2eat.need2eat.util.DateConverter;
 import at.need2eat.need2eat.util.LogUtils;
 import at.need2eat.need2eat.R;
 
@@ -63,9 +67,17 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
           Resources resources = getResources();
 
           Intent intent = new Intent(context, EditActivity.class);
-          intent.putExtra(resources.getString(R.string.extra_gtin), expandedResult.getProductID());
-          intent.putExtra(resources.getString(R.string.extra_expiry),
-              expandedResult.getExpirationDate());
+
+          Date expiryDate = null;
+
+          try {
+            expiryDate = DateConverter.getDateFromString(expandedResult.getExpirationDate());
+          } catch (ParseException e) {
+            // If an error occurs the date should stay null
+          }
+
+          intent.putExtra(resources.getString(R.string.extra_product),
+              new Product(expandedResult.getProductID(), null, expiryDate));
           context.startActivity(intent);
           ((Activity) context).finish();
         }
@@ -80,17 +92,24 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     }
   }
 
-  private SurfaceHolder holder;
-  private Camera camera;
+  // These values represent measurements of the display
   private int width;
   private int height;
-  private MultiFormatReader reader;
   private int left;
   private int top;
   private int areaWidth;
   private int areaHeight;
-  private AlertDialog dialog;
+
+  // The ZXing reader and decoder for barcodes
+  private MultiFormatReader reader;
+
+  // These values represent the context the preview and the dialog are running in
   private Context context;
+  private AlertDialog dialog;
+
+  // These values represent the camera and its surface holder
+  private Camera camera;
+  private SurfaceHolder holder;
 
   /**
    * Creates a new Camerapreview with the {@link Context} and {@link Camera} given. Furthermore,
@@ -154,10 +173,8 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
   public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
     if (this.holder.getSurface() != null) {
       try {
-        // camera.stopPreview();
         camera.setPreviewCallback(new CameraCallback());
         camera.setPreviewDisplay(holder);
-        // camera.startPreview();
       } catch (IOException e) {
         dialog = LogUtils.logError(getContext(), getClass().getSimpleName(),
             "Surface zur Vorschau-Anzeige nicht verfügbar!", e);
@@ -168,8 +185,6 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
             ((Activity) CameraPreview.this.context).finish();
           }
         });
-      } catch (Throwable e) {
-
       }
 
     }
@@ -198,12 +213,10 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
    */
   public void onPause() {
     if (camera != null) {
-      try {
-        camera.setPreviewCallback(null);
-        camera.stopPreview();
-      } catch (Throwable e) {
-
-      }
+      camera.setPreviewCallback(null);
+      camera.stopPreview();
+      camera.release();
+      camera = null;
     }
   }
 
