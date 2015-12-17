@@ -95,6 +95,7 @@ public class IndicatorView extends View {
 
   //The resource IDs for the size of the text in the circle
   private static final int NORMAL_TEXT_SIZE = R.dimen.indicator_text_size;
+  private static final int TWO_DIGIT_TEXT_SIZE = R.dimen.indicator_text_size_2d;
   private static final int SMALL_TEXT_SIZE = R.dimen.indicator_text_size_small;
 
   //These values represent the IndicatorView's current state and are displayed in the GUI
@@ -124,9 +125,12 @@ public class IndicatorView extends View {
     this.number = number;
     final Resources resources = getResources();
     final int textResource;
-    if (number <= NUMBER_DISPLAY_LIMIT) {
+    if (number < 10) {
       displayText = number.toString();
       textResource = NORMAL_TEXT_SIZE;
+    } else if (number <= NUMBER_DISPLAY_LIMIT) {
+      displayText = number.toString();
+      textResource = TWO_DIGIT_TEXT_SIZE;
     } else {
       displayText = NUMBER_DISPLAY_LIMIT + "+";
       textResource = SMALL_TEXT_SIZE;
