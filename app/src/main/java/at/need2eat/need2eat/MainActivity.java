@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
   public void onScanButtonClicked() {
     Intent intent = new Intent(this, ScannerActivity.class);
     startActivity(intent);
+    overridePendingTransition(R.anim.fab_in, R.anim.hold);
   }
 
 }
