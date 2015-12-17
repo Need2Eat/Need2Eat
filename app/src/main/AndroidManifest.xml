@@ -39,10 +39,6 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="nosensor"/>
 
-        <meta-data
-            android:name="api_key"
-            android:value="@string/api_key"/>
-
     </application>
 
 </manifest>
