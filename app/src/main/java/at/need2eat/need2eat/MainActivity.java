@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
       case R.id.action_add:
         Intent intent = new Intent(this, EditActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         return true;
       //Under normal circumstances, this block should never be reached
       default:
