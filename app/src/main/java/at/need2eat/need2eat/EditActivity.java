@@ -8,12 +8,11 @@ import android.view.View;
 import android.widget.*;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import at.need2eat.need2eat.database.DatabaseHandler;
 import at.need2eat.need2eat.database.OutpanManager;
+import at.need2eat.need2eat.util.DateConverter;
 import at.need2eat.need2eat.util.LogUtils;
 
 /**
@@ -67,7 +66,7 @@ public class EditActivity extends AppCompatActivity {
         date = null;
       } else {
         try {
-          date = getDateFromString(bundle.getString(EXPIRY_DATE));
+          date = DateConverter.getDateFromString(bundle.getString(EXPIRY_DATE));
         } catch (ParseException e) {
           date = null;
         }
@@ -107,7 +106,7 @@ public class EditActivity extends AppCompatActivity {
         productname = PRODUCTNAME_EDIT.getText().toString();
         gtin = GTIN_EDIT.getText().toString();
         try {
-          date = getDateFromString(DATE_EDIT.getText().toString());
+          date = DateConverter.getDateFromString(DATE_EDIT.getText().toString());
         } catch (ParseException e) {
           date = null;
         }
@@ -131,7 +130,7 @@ public class EditActivity extends AppCompatActivity {
     PRODUCTNAME_EDIT.setText(productname);
     GTIN_EDIT.setText(gtin);
     try {
-      DATE_EDIT.setText(getStringFromDate(date));
+      DATE_EDIT.setText(DateConverter.getStringFromDate(date));
     } catch (IllegalArgumentException e) {
       DATE_EDIT.setText("");
     }
@@ -147,19 +146,6 @@ public class EditActivity extends AppCompatActivity {
     this.productname = (productname == null) ? "" : productname;
     this.gtin = gtin;
     this.date = (date == null) ? null : date;
-  }
-
-  private Date getDateFromString(String expiryDate) throws ParseException {
-    SimpleDateFormat sdf = new SimpleDateFormat("dd.mm.yyyy", Locale.GERMANY);
-    return sdf.parse(expiryDate);
-  }
-
-  private String getStringFromDate(Date expiryDate) throws IllegalArgumentException {
-    if (expiryDate == null) {
-      throw new IllegalArgumentException();
-    }
-    SimpleDateFormat sdf = new SimpleDateFormat("dd.mm.yyyy", Locale.GERMANY);
-    return sdf.format(expiryDate);
   }
 
 }
