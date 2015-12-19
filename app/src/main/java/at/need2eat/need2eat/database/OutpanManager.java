@@ -1,71 +1,92 @@
 package at.need2eat.need2eat.database;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
 
-import at.need2eat.need2eat.Product;
+import javax.net.ssl.HttpsURLConnection;
 
 /**
- * Created by Tomi on 18.11.2015.
- */
-
+ * This class represents the connection to the database of Outpan
+ * @author Tomi Mijatovic (until 19.12.2015)
+ * @author Maxi Nothnagel - mx.nothnagel@gmail.com (starting 19.12.2015)
+ * @author Patrick Taibel
+*/
 public class OutpanManager implements OutpanHandler {
+  // The API key of Outpan
+  private String apiKey;
 
   /**
-   * This is our api_key from the Outpan DB
+   * Creates a new OutpanManager with the specific API key
+   * @param apiKey the {@code String} that represents the API key to connect to the Outpan database
    */
-  private static String api_key = "21695344493be75568b4c42ef6b80d99";
-  public static String code;
-  public static String name;
+  public OutpanManager(String apiKey) {
+    this.apiKey = apiKey;
+  }
 
-  /**
-   * this Contructor sets this api key(see 'private string api_key') from our Outpan DB
-   * to the included api_key
-   *
-   * @param api_key
-   */
-    public OutpanManager(String api_key) {
-      this.api_key = api_key;
-    }
-
+  @Override
   public String getName(String gtin) {
-    code = gtin;
-    String name = "";
-    JSONObject jsonResult = new JSONObject();
+    /*
+    These values must be declared before the try statement in order to close/disconnect them in the
+    finally block as HttpsURLConnection is not AutoClosable
+     */
+    HttpsURLConnection connection = null;
+    InputStream in = null;
+
+    // The JSONObject that represents the result of the GET request
+    JsonObject result = null;
 
     try {
-      /** defines the url, where it has to go */
-      URL url = new URL("https://api.outpan.com/v2/products/"+code+"?apikey="+api_key);
-      /** creates the connection and "opens" it */
-      URLConnection uc = url.openConnection();
+      /*
+      Create a new HttpsURLConnection to Outpan. This has to be a HttpsURLConnection as Outpan
+      only accepts HTTPs GET requests
+       */
+      connection = (HttpsURLConnection) new URL(String.format(
+        "https://api.outpan.com/v2/products/%s?apikey=%s", gtin, apiKey)).openConnection();
 
-      String key = api_key + ":";
+      in = connection.getInputStream();
+      BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
-      /** connects with this network connection */
+      StringBuilder output = new StringBuilder();
+      String line;
 
-      int numCharsRead;
-      char[] charArray = new char[1024];
-      StringBuffer sb = new StringBuffer();
+      // Read the output which is a JSON Object line by line and append it to the StringBuilder
+      while ((line = reader.readLine()) != null) {
+        output.append(line).append("\n");
+      }
 
-      jsonResult = new JSONObject(sb.toString());
-      name = jsonResult.toString();
-    } catch (MalformedURLException e) {
-      e.printStackTrace();
+      // Create a JsonObject using the output as a String
+      result = new JsonParser().parse(output.toString()).getAsJsonObject();
     } catch (IOException e) {
-      e.printStackTrace();
-    } catch (JSONException e) {
-      e.printStackTrace();
+      return "";
+      /*
+      If any of these Exceptions occur, an empty String is returned to represent that nothing
+      could be found
+       */
+    } finally {
+      // Close the InputStream and disconnect the connection (if they are not null)
+      if (in != null) {
+        try {
+          in.close();
+        } catch (IOException e) {
+          /*
+          This catch block can be empty as if closing the connection fails, one can assume
+          that it has already been closed
+            */
+        }
+      }
+
+      if (connection != null) {
+        connection.disconnect();
+      }
     }
 
-    return name;
+    // Return the name of the product or an empty String if the name could not be found
+    return result.get("name").getAsString();
   }
 }
