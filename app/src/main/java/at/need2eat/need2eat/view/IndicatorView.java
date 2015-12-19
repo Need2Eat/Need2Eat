@@ -55,6 +55,10 @@ public class IndicatorView extends View {
     }
   }
 
+  /**
+   * This class represents data from an {@link IndicatorState} in form of actual resources instead
+   * of resource IDs.
+   */
   private static class IndicatorInfo {
 
     private int backgroundColor;
