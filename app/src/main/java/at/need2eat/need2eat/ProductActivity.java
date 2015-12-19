@@ -4,20 +4,23 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.util.Date;
 
+import at.need2eat.need2eat.database.DatabaseHandler;
 import at.need2eat.need2eat.util.DateConverter;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * This class contains the User Interface for showing the product information for a specific
  * product.
  * @author Mario Kriszta
+ * @author Maxi Nothnagel - mx.nothnagel@gmail.com
  */
 public class ProductActivity extends AppCompatActivity {
 
@@ -25,11 +28,21 @@ public class ProductActivity extends AppCompatActivity {
   @Bind(R.id.TextviewGTIN) protected TextView textviewGTIN;
   @Bind(R.id.TextviewAblauf) protected TextView textviewAblauf;
 
+  @Bind(R.id.backButton) protected LinearLayout BACK_BUTTON;
+  @Bind(R.id.deleteButton) protected LinearLayout DELETE_BUTTON;
+  @Bind(R.id.editButton) protected LinearLayout EDIT_BUTTON;
+
+  private int id;
+
+  Resources resources;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_product);
     ButterKnife.bind(this);
+
+    resources = getResources();
 
     intitializeLayout();
   }
@@ -38,42 +51,14 @@ public class ProductActivity extends AppCompatActivity {
    * Function to initialize all important elements and applies onClickListeners to the buttons.
    */
   private void intitializeLayout() {
-    final LinearLayout BACK_BUTTON = (LinearLayout)findViewById(R.id.backButton);
-    final LinearLayout DELETE_BUTTON = (LinearLayout)findViewById(R.id.deleteButton);
-    final LinearLayout EDIT_BUTTON = (LinearLayout)findViewById(R.id.editButton);
+    Intent intent = getIntent();
+    Bundle bundle = intent.getExtras();
 
-    BACK_BUTTON.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        finish();
-      }
-    });
-
-    DELETE_BUTTON.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        // TODO: delete product from database
-        finish();
-      }
-    });
-
-    EDIT_BUTTON.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Resources resources = getResources();
-        final String GTIN = resources.getString(R.string.extra_gtin);
-        final String EXPIRY_DATE = resources.getString(R.string.extra_expiry);
-        final String NAME = resources.getString(R.string.extra_name);
-        Intent intent = new Intent(ProductActivity.this, EditActivity.class);
-        intent.putExtra(GTIN, "48495384");
-        intent.putExtra(EXPIRY_DATE, "12.12.2017");
-        intent.putExtra(NAME, "HansHandcreme");
-        intent.putExtra(resources.getString(R.string.extra_id), 112);
-        ProductActivity.this.startActivity(intent);
-        finish();
-      }
-    });
-
+    Product product = (Product) bundle.get(resources.getString(R.string.extra_product));
+    id = product.getID();
+    setTextviewAblauf(product.getExpiryDate());
+    setTextviewGTIN(product.getGTIN());
+    setTextviewProductName(product.getName());
   }
 
   /**
@@ -98,5 +83,39 @@ public class ProductActivity extends AppCompatActivity {
    */
   private void setTextviewAblauf(Date expiryDate){
     textviewAblauf.setText(DateConverter.getStringFromDate(expiryDate));
+  }
+
+  @OnClick(R.id.backButton)
+  public void onBackButtonClicked() {
+    finish();
+  }
+
+  @OnClick(R.id.deleteButton)
+  public void onDeleteButtonClicked() {
+    DatabaseHandler handler = new DatabaseHandler(this);
+    handler.deleteProduct(id);
+
+    finish();
+  }
+
+  @OnClick(R.id.editButton)
+  public void onAcceptButtonClicked() {
+    Intent intent = new Intent(ProductActivity.this, EditActivity.class);
+
+    Date date;
+
+    try {
+      date = DateConverter.getDateFromString(textviewAblauf.getText().toString());
+    } catch (ParseException e) {
+      date = null;
+    }
+
+    Product product = new Product(id, textviewGTIN.getText().toString(),
+        textviewProductName.getText().toString(), date);
+
+    intent.putExtra(resources.getString(R.string.extra_product), product);
+
+    ProductActivity.this.startActivity(intent);
+    finish();
   }
 }

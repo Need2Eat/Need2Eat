@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.*;
 
 import java.text.ParseException;
@@ -15,6 +14,11 @@ import at.need2eat.need2eat.database.OutpanManager;
 import at.need2eat.need2eat.util.DateConverter;
 import at.need2eat.need2eat.util.LogUtils;
 
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * This class contains the interface of the EditActivity, which allows the user to edit
  * information of a product manually.
@@ -22,6 +26,13 @@ import at.need2eat.need2eat.util.LogUtils;
  * @author Maxi Nothnagel - mx.nothnagel@gmail.com
  */
 public class EditActivity extends AppCompatActivity {
+
+  @Bind(R.id.productNameEdit) protected EditText productnameEdit;
+  @Bind(R.id.gtinTextEdit) protected EditText gtinEdit;
+  @Bind(R.id.dateTextEdit) protected EditText dateEdit;
+
+  @Bind(R.id.backButton) protected LinearLayout backButton;
+  @Bind(R.id.acceptButton) protected LinearLayout acceptButton;
 
   /** The full name of the particular product. */
   private String productname;
@@ -40,41 +51,23 @@ public class EditActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_edit);
 
+    ButterKnife.bind(this);
+
     Resources resources = getResources();
 
     Intent intent = getIntent();
     Bundle bundle = intent.getExtras();
 
-    final String GTIN = resources.getString(R.string.extra_gtin);
-    final String EXPIRY_DATE = resources.getString(R.string.extra_expiry);
-    final String NAME = resources.getString(R.string.extra_name);
-
     if (bundle != null) {
-      try {
-        id = bundle.getInt(resources.getString(R.string.extra_id));
-      } catch (Resources.NotFoundException e) {
-        id = 0;
-      }
+      Product product = (Product) bundle.get(resources.getString(R.string.extra_product));
+      id = product.getID();
+      date = product.getExpiryDate();
+      productname = product.getName();
+      gtin = product.getGTIN();
 
-      if (bundle.getString(NAME) == null) {
-        bundle.putString(NAME,
-            new OutpanManager(resources.getString(R.string.api_key))
-                .getName(GTIN));
+      if (productname == null) {
+        productname = new OutpanManager(resources.getString(R.string.api_key)).getName(gtin);
       }
-
-      if (bundle.getString(EXPIRY_DATE) == null) {
-        date = null;
-      } else {
-        try {
-          date = DateConverter.getDateFromString(bundle.getString(EXPIRY_DATE));
-        } catch (ParseException e) {
-          date = null;
-        }
-      }
-
-      setData(bundle.getString(NAME), bundle.getString(GTIN), date);
-    } else {
-      setData("", "", null);
     }
 
     initializeLayout();
@@ -86,66 +79,43 @@ public class EditActivity extends AppCompatActivity {
    * expiration date).
    */
   private void initializeLayout() {
-
-    final EditText PRODUCTNAME_EDIT = (EditText)findViewById(R.id.productNameEdit);
-    final EditText GTIN_EDIT = (EditText)findViewById(R.id.gtinTextEdit);
-    final EditText DATE_EDIT = (EditText)findViewById(R.id.dateTextEdit);
-    final LinearLayout BACK_BUTTON = (LinearLayout)findViewById(R.id.backButton);
-    final LinearLayout ACCEPT_BUTTON = (LinearLayout)findViewById(R.id.acceptButton);
-
-    BACK_BUTTON.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        finish();
-      }
-    });
-
-    ACCEPT_BUTTON.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        productname = PRODUCTNAME_EDIT.getText().toString();
-        gtin = GTIN_EDIT.getText().toString();
-        try {
-          date = DateConverter.getDateFromString(DATE_EDIT.getText().toString());
-        } catch (ParseException e) {
-          date = null;
-        }
-
-        if (productname.equals("") || gtin.equals("") || date == null) {
-          LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(), "Achtung!",
-              "Bitte alle Felder ausfüllen!");
-        } else {
-          DatabaseHandler handler = new DatabaseHandler(EditActivity.this);
-          if (id == 0) {
-            handler.addProduct(new Product(gtin, productname, date));
-            finish();
-          } else {
-            handler.updateProduct(new Product(id, gtin, productname, date));
-            finish();
-          }
-        }
-      }
-    });
-
-    PRODUCTNAME_EDIT.setText(productname);
-    GTIN_EDIT.setText(gtin);
+    productnameEdit.setText(productname);
+    gtinEdit.setText(gtin);
     try {
-      DATE_EDIT.setText(DateConverter.getStringFromDate(date));
+      dateEdit.setText(DateConverter.getStringFromDate(date));
     } catch (IllegalArgumentException e) {
-      DATE_EDIT.setText("");
+      dateEdit.setText("");
     }
   }
 
-  /**
-   * Function to set or update the information of the product.
-   * @param productname is the full name of the current product.
-   * @param gtin is the barcode of the product, saved as digits.
-   * @param date is the expiration date of the product.
-   */
-  private void setData(String productname, String gtin, Date date) {
-    this.productname = (productname == null) ? "" : productname;
-    this.gtin = gtin;
-    this.date = (date == null) ? null : date;
+  @OnClick(R.id.acceptButton)
+  public void onAcceptButtonClicked() {
+    productname = productnameEdit.getText().toString();
+    gtin = gtinEdit.getText().toString();
+    try {
+      date = DateConverter.getDateFromString(dateEdit.getText().toString());
+    } catch (ParseException e) {
+      date = null;
+    }
+
+    if (productname.equals("") || gtin.equals("") || date == null) {
+      LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(), "Achtung!",
+          "Bitte alle Felder ausfüllen!");
+    } else {
+      DatabaseHandler handler = new DatabaseHandler(EditActivity.this);
+      if (id == 0) {
+        handler.addProduct(new Product(gtin, productname, date));
+        finish();
+      } else {
+        handler.updateProduct(new Product(id, gtin, productname, date));
+        finish();
+      }
+    }
+  }
+
+  @OnClick(R.id.backButton)
+  public void onBackButtonClicked() {
+    finish();
   }
 
 }
