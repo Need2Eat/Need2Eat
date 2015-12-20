@@ -98,7 +98,7 @@ public class EditActivity extends AppCompatActivity {
       date = null;
     }
 
-    if (productname.equals("") || gtin.equals("") || date == null) {
+    if (productname.equals("") || date == null) {
       LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(), "Achtung!",
           "Bitte alle Felder ausfüllen!");
     } else {
