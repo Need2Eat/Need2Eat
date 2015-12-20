@@ -1,38 +1,168 @@
 package at.need2eat.need2eat.database;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.media.Image;
-import android.provider.ContactsContract;
+import android.provider.BaseColumns;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
+import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 
 import at.need2eat.need2eat.Product;
+import at.need2eat.need2eat.util.DateConverter;
 
 /**
- * Created by Tomi on 25.11.2015.
+ * @author Tomi Mijatovic (until 20.12.2015)
+ * @author Maxi Nothnagel - mx.nothnagel@gmail.com (starting 20.12.2015)
  */
-public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager{
-    static Connection c = null;
+public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager {
 
-  /**
+  private enum ColumnName implements BaseColumns {
+    GTIN("gtin"),
+    PRODUCTNAME("productname"),
+    EXPIRY_DATE("expiryDate");
+
+    private String name;
+
+    ColumnName(String name) {
+      this.name = name;
+    }
+
+    public String getName() {
+      return this.name;
+    }
+  }
+
+  private enum SqlStatements {
+    CREATE("CREATE TABLE IF NOT EXISTS %s ("
+        + "%s int auto_increment primary key, %s varchar(400) not null,"
+        + "%s varchar(100), %s char(10))"),
+    DROP("DROP TABLE IF EXISTS %s"),
+    WHERE("%s = %d");
+
+    private String stm;
+
+    SqlStatements(String stm) {
+      this.stm = stm;
+    }
+
+    public String getStatement() {
+      return this.stm;
+    }
+  }
+
+  private static final String DATABASE_NAME = "Need2Eat";
+  private static final String TABLE_NAME = "Product";
+  private static final int VERSION = 1;
+
+  public DatabaseHandler(Context context) {
+    super(context, DatabaseHandler.DATABASE_NAME, null, DatabaseHandler.VERSION);
+  }
+
+  // SQLiteOpenHelper Methods
+  @Override
+  public void onCreate(SQLiteDatabase db) {
+    db.execSQL(String.format(SqlStatements.CREATE.getStatement(),
+        DatabaseHandler.TABLE_NAME, ColumnName._ID, ColumnName.PRODUCTNAME,
+        ColumnName.GTIN, ColumnName.EXPIRY_DATE));
+  }
+
+  @Override
+  public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    db.execSQL(String.format(SqlStatements.DROP.getStatement(), DatabaseHandler.TABLE_NAME));
+    onCreate(db);
+  }
+
+  // DatabaseManager Methods
+  @Override
+  public Product getProduct(int id) {
+    Product result = null;
+
+    try (SQLiteDatabase database = getReadableDatabase();
+         Cursor c = database.query(DatabaseHandler.TABLE_NAME,
+             new String[]{ColumnName.GTIN.getName(), ColumnName.PRODUCTNAME
+                 .getName(), ColumnName.EXPIRY_DATE.getName()},
+             String.format(SqlStatements.WHERE.getStatement(), ColumnName._ID, id), null, null, null,
+             null)) {
+
+      List<String> output = new LinkedList<>();
+
+      while (c.moveToNext()) {
+        output.add(c.getString(c.getColumnIndex(ColumnName._ID)));
+        output.add(c.getString(c.getColumnIndex(ColumnName.GTIN.getName())));
+        output.add(c.getString(c.getColumnIndex(ColumnName.PRODUCTNAME.getName())));
+        output.add(c.getString(c.getColumnIndex(ColumnName.EXPIRY_DATE.getName())));
+      }
+
+      try {
+        result = new Product(Integer.parseInt(output.get(0)), output.get(1), output.get(2),
+            DateConverter.getDateFromString(output.get(3)));
+      } catch (ParseException e) {
+        result = new Product(Integer.parseInt(output.get(0)), output.get(1), output.get(3), null);
+      }
+    } catch (SQLiteException e) {
+
+    }
+
+    return result;
+  }
+
+  @Override
+  public List<Product> getAllProducts() {
+    List<Product> result = new LinkedList<>();
+
+    try (SQLiteDatabase database = getReadableDatabase();
+         Cursor c = database.query(DatabaseHandler.TABLE_NAME,
+             new String[]{ColumnName.GTIN.getName(), ColumnName.PRODUCTNAME
+                 .getName(), ColumnName.EXPIRY_DATE.getName()},
+             null, null, null, null, null)) {
+
+      while (c.moveToNext()) {
+        int id = c.getInt(c.getColumnIndex(ColumnName._ID));
+        String gtin = c.getString(c.getColumnIndex(ColumnName.GTIN.getName()));
+        String name = c.getString(c.getColumnIndex(ColumnName.PRODUCTNAME.getName()));
+        Date date = null;
+        try {
+          date = DateConverter.getDateFromString(c.getString(
+              c.getColumnIndex(ColumnName.EXPIRY_DATE.getName())));
+        } catch (ParseException e) {
+          // This catch block can be left empty as it should not be able to throw a ParseException
+        }
+
+        result.add(new Product(id, gtin, name, date));
+      }
+    } catch (SQLiteException e) {
+
+    }
+
+    return result;
+  }
+
+  @Override
+  public void addProduct(Product newProduct) {
+
+  }
+
+  @Override
+  public void updateProduct(Product newProduct) {
+
+  }
+
+  @Override
+  public void deleteProduct(int id) {
+
+  }
+   /* static Connection c = null;
+
+  *//**
    * This "openConnection"-Method creates a connection
    * to our internal database
-   */
+   *//*
     public static void openConnection(){
       try {
         //Class.forName("org.sqlite.JDBC");
@@ -128,10 +258,10 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   }
 
   public Product getProduct(String gtin) throws SQLException {
-    /**
+    *//**
      *
      * RawQuery: Runs the provided SQL
-     */
+     *//*
     Product p1 = new Product(gtin,KEY_NAME,KEY_EXPIRYDATE);
     Statement stmt = null;
     try {
@@ -186,14 +316,14 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
 
   // Updating single Product
 
-  /**
+  *//**
    * this method updates a Product with the new given values
    *
    * @param gtin
    * @param setGTIN
    * @param setName
    * @param setExpiryDate
-   */
+   *//*
   public void updateProduct(String gtin, String setGTIN, String setName, String setExpiryDate) {
     try {
       db.execSQL("UPDATE Product"
@@ -214,6 +344,6 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
       System.err.println( e.getClass().getName() + ": " + e.getMessage() );
     }
     System.out.println("Deleting of Product successfull");
-  }
+  }*/
 }
 
