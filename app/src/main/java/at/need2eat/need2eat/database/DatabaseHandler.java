@@ -15,6 +15,7 @@ import java.util.List;
 
 import at.need2eat.need2eat.Product;
 import at.need2eat.need2eat.util.DateConverter;
+import at.need2eat.need2eat.util.LogUtils;
 
 /**
  * @author Tomi Mijatovic (until 20.12.2015)
@@ -22,6 +23,10 @@ import at.need2eat.need2eat.util.DateConverter;
  */
 public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager {
 
+  /**
+   * This enum provides statically defined column names of the SQLite database
+   * @author Maxi Nothnagel - mx.nothnagel@gmail.com
+   */
   private enum ColumnName implements BaseColumns {
     GTIN("gtin"),
     PRODUCTNAME("productname"),
@@ -29,15 +34,27 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
 
     private String name;
 
+    /**
+     * Creates a new {@code ColumnName} with the given name
+     * @param name the name of the column
+     */
     ColumnName(String name) {
       this.name = name;
     }
 
+    /**
+     * Returns the name of the column as a {@code String}
+     * @return the name of the column
+     */
     public String getName() {
       return this.name;
     }
   }
 
+  /**
+   * This enum provides statically defined SQL statements or parts of SQL statements
+   * @author Maxi Nothnagel - mx.nothnagel@gmail.com
+   */
   private enum SqlStatements {
     CREATE("CREATE TABLE IF NOT EXISTS %s ("
         + "%s int auto_increment primary key, %s varchar(400) not null,"
@@ -47,21 +64,38 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
 
     private String stm;
 
+    /**
+     * Creates a new statement with the given {@code String} as the statement
+     * @param stm the SQL statement
+     */
     SqlStatements(String stm) {
       this.stm = stm;
     }
 
+    /**
+     * Returns the statement as a {@code String}
+     * @return the statement
+     */
     public String getStatement() {
       return this.stm;
     }
   }
 
+  // The Context of the Database
+  private Context context;
+
+  // The information about the database
   private static final String DATABASE_NAME = "Need2Eat";
   private static final String TABLE_NAME = "Product";
   private static final int VERSION = 1;
 
+  /**
+   * Creates a new {@code DatabaseHandler} with the given {@link Context}
+   * @param context the {@code Context} to use, create or open the database
+   */
   public DatabaseHandler(Context context) {
     super(context, DatabaseHandler.DATABASE_NAME, null, DatabaseHandler.VERSION);
+    this.context = context;
   }
 
   // SQLiteOpenHelper Methods
@@ -74,6 +108,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    // Drop old tables and create the new ones
     db.execSQL(String.format(SqlStatements.DROP.getStatement(), DatabaseHandler.TABLE_NAME));
     onCreate(db);
   }
@@ -87,11 +122,12 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
          Cursor c = database.query(DatabaseHandler.TABLE_NAME,
              new String[]{ColumnName.GTIN.getName(), ColumnName.PRODUCTNAME
                  .getName(), ColumnName.EXPIRY_DATE.getName()},
-             String.format(SqlStatements.WHERE.getStatement(), ColumnName._ID, id), null, null, null,
-             null)) {
+             String.format(SqlStatements.WHERE.getStatement(), ColumnName._ID, id), null, null,
+             null, null)) {
 
       List<String> output = new LinkedList<>();
 
+      // Iterate over the output rows and add the values of the columns as Strings to the list
       while (c.moveToNext()) {
         output.add(c.getString(c.getColumnIndex(ColumnName._ID)));
         output.add(c.getString(c.getColumnIndex(ColumnName.GTIN.getName())));
@@ -99,14 +135,20 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
         output.add(c.getString(c.getColumnIndex(ColumnName.EXPIRY_DATE.getName())));
       }
 
+      // Create a new Product with the information of the output
       try {
         result = new Product(Integer.parseInt(output.get(0)), output.get(1), output.get(2),
             DateConverter.getDateFromString(output.get(3)));
       } catch (ParseException e) {
+        /*
+        If the date from the database could not be converted to a Date. However,
+        this catch block should not be reachable as the dates are added directly
+        from the EditActivity
+         */
         result = new Product(Integer.parseInt(output.get(0)), output.get(1), output.get(3), null);
       }
     } catch (SQLiteException e) {
-
+      LogUtils.logError(context, "DatabaseHandler", "Verbindung zur Datenbank gescheitert!", e);
     }
 
     return result;
@@ -122,6 +164,10 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
                  .getName(), ColumnName.EXPIRY_DATE.getName()},
              null, null, null, null, null)) {
 
+      /*
+      Iterate over the output rows and create a new product for every row using the information
+      from the columns
+       */
       while (c.moveToNext()) {
         int id = c.getInt(c.getColumnIndex(ColumnName._ID));
         String gtin = c.getString(c.getColumnIndex(ColumnName.GTIN.getName()));
@@ -131,13 +177,17 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
           date = DateConverter.getDateFromString(c.getString(
               c.getColumnIndex(ColumnName.EXPIRY_DATE.getName())));
         } catch (ParseException e) {
-          // This catch block can be left empty as it should not be able to throw a ParseException
+          /*
+          If the date from the database could not be converted to a Date. However,
+          this catch block should not be reachable as the dates are added directly
+          from the EditActivity
+           */
         }
 
         result.add(new Product(id, gtin, name, date));
       }
     } catch (SQLiteException e) {
-
+      LogUtils.logError(context, "DatabaseHandler", "Verbindung zur Datenbank gescheitert!", e);
     }
 
     return result;
