@@ -10,18 +10,12 @@ import at.need2eat.need2eat.Product;
 public interface DatabaseManager {
 
   /**
-   * This method should return the {@link Product} with the specified ID by fetching it from the
-   * database.
-   * @param id the unique ID of the Product to fetch
-   * @return the Product stored in the database under the given ID
-   */
-  Product getProduct(int id);
-
-  /**
    * This method should return all {@link Product}s from the database at once.
+   * @param sorted {@code true} if the resulted {@code List} should be sorted by expiry date,
+   * otherwise set {@code false}
    * @return a {@link List} of all Products currently stored in the database
    */
-  List<Product> getAllProducts();
+  List<Product> getAllProducts(boolean sorted);
 
   /**
    * This method should insert the given {@link Product} into the database.
