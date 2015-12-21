@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 import java.text.ParseException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -101,9 +103,9 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   // SQLiteOpenHelper Methods
   @Override
   public void onCreate(SQLiteDatabase db) {
-    db.execSQL(String.format(SqlStatements.CREATE.getStatement(),
-        DatabaseHandler.TABLE_NAME, ColumnName._ID, ColumnName.PRODUCTNAME,
-        ColumnName.GTIN, ColumnName.EXPIRY_DATE));
+    db.execSQL(String
+        .format(SqlStatements.CREATE.getStatement(), DatabaseHandler.TABLE_NAME, ColumnName._ID,
+            ColumnName.PRODUCTNAME, ColumnName.GTIN, ColumnName.EXPIRY_DATE));
   }
 
   @Override
@@ -115,47 +117,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
 
   // DatabaseManager Methods
   @Override
-  public Product getProduct(int id) {
-    Product result = null;
-
-    try (SQLiteDatabase database = getReadableDatabase();
-         Cursor c = database.query(DatabaseHandler.TABLE_NAME,
-             new String[]{ColumnName.GTIN.getName(), ColumnName.PRODUCTNAME
-                 .getName(), ColumnName.EXPIRY_DATE.getName()},
-             String.format(SqlStatements.WHERE.getStatement(), ColumnName._ID, id), null, null,
-             null, null)) {
-
-      List<String> output = new LinkedList<>();
-
-      // Iterate over the output rows and add the values of the columns as Strings to the list
-      while (c.moveToNext()) {
-        output.add(c.getString(c.getColumnIndex(ColumnName._ID)));
-        output.add(c.getString(c.getColumnIndex(ColumnName.GTIN.getName())));
-        output.add(c.getString(c.getColumnIndex(ColumnName.PRODUCTNAME.getName())));
-        output.add(c.getString(c.getColumnIndex(ColumnName.EXPIRY_DATE.getName())));
-      }
-
-      // Create a new Product with the information of the output
-      try {
-        result = new Product(Integer.parseInt(output.get(0)), output.get(1), output.get(2),
-            DateConverter.getDateFromString(output.get(3)));
-      } catch (ParseException e) {
-        /*
-        If the date from the database could not be converted to a Date. However,
-        this catch block should not be reachable as the dates are added directly
-        from the EditActivity
-         */
-        result = new Product(Integer.parseInt(output.get(0)), output.get(1), output.get(3), null);
-      }
-    } catch (SQLiteException e) {
-      LogUtils.logError(context, "DatabaseHandler", "Verbindung zur Datenbank gescheitert!", e);
-    }
-
-    return result;
-  }
-
-  @Override
-  public List<Product> getAllProducts() {
+  public List<Product> getAllProducts(boolean sorted) {
     List<Product> result = new LinkedList<>();
 
     try (SQLiteDatabase database = getReadableDatabase();
@@ -188,6 +150,19 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
       }
     } catch (SQLiteException e) {
       LogUtils.logError(context, "DatabaseHandler", "Verbindung zur Datenbank gescheitert!", e);
+    }
+
+    if (sorted) {
+      /*
+      Sort the list of products by their expiry date (products which expire earlier are more
+      important)
+       */
+      Collections.sort(result, new Comparator<Product>() {
+        @Override
+        public int compare(Product product1, Product product2) {
+          return product1.getDaysUntilExpiry() - product2.getDaysUntilExpiry();
+        }
+      });
     }
 
     return result;
