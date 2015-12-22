@@ -1,5 +1,6 @@
 package at.need2eat.need2eat.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -151,9 +152,26 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
     return result;
   }
 
+  private ContentValues getValuesFromProduct(Product product) {
+    ContentValues content = new ContentValues();
+    String[] keys = new String[] {
+        ColumnName.GTIN.toString(), ColumnName.EXPIRY_DATE.toString(),
+        ColumnName.PRODUCTNAME.toString()
+    };
+    String[] values = new String[] {
+        product.getGTIN(), product.getExpiryDateString(), product.getName()
+    };
+    for (int i = 0; i < keys.length; i++) {
+      content.put(keys[i], values[i]);
+    }
+    return content;
+  }
+
   @Override
   public void addProduct(Product newProduct) {
-
+    SQLiteDatabase db = getWritableDatabase();
+    db.insert(TABLE_NAME, null, getValuesFromProduct(newProduct));
+    db.close();
   }
 
   @Override
