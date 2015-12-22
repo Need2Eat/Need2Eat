@@ -2,6 +2,7 @@ package at.need2eat.need2eat;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.*;
@@ -9,7 +10,7 @@ import android.widget.*;
 import java.text.ParseException;
 import java.util.Date;
 
-import at.need2eat.need2eat.database.DatabaseHandler;
+import at.need2eat.need2eat.database.DatabaseTask;
 import at.need2eat.need2eat.database.OutpanManager;
 import at.need2eat.need2eat.util.DateConverter;
 import at.need2eat.need2eat.util.LogUtils;
@@ -26,6 +27,28 @@ import butterknife.OnClick;
  * @author Maxi Nothnagel - mx.nothnagel@gmail.com
  */
 public class EditActivity extends AppCompatActivity {
+
+  /**
+   * This private class starts an asynchronous task to connect to the Outpan database and get the
+   * name of a specific product. To start the asynchronous task call
+   * {@link at.need2eat.need2eat.EditActivity.OutpanTask#execute(Object[])} with a {@code String}
+   * Array containing the API key of Outpan (first element) and the GTIN of the product. The
+   * {@code EditText} field containing the name of the product will be set automatically after the
+   * call has been finished
+   */
+  private class OutpanTask extends AsyncTask<String, Void, Void> {
+
+    @Override
+    protected Void doInBackground(String... params) {
+      productname = new OutpanManager(params[0]).getName(params[1]);
+      return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+      productnameEdit.setText(productname);
+    }
+  }
 
   @Bind(R.id.productNameEdit) protected EditText productnameEdit;
   @Bind(R.id.gtinTextEdit) protected EditText gtinEdit;
@@ -66,7 +89,7 @@ public class EditActivity extends AppCompatActivity {
       gtin = product.getGTIN();
 
       if (productname == null) {
-        productname = new OutpanManager(resources.getString(R.string.api_key)).getName(gtin);
+        new OutpanTask().execute(resources.getString(R.string.api_key), gtin);
       }
     }
 
@@ -102,14 +125,8 @@ public class EditActivity extends AppCompatActivity {
       LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(), "Achtung!",
           "Bitte alle Felder ausfüllen!");
     } else {
-      DatabaseHandler handler = new DatabaseHandler(EditActivity.this);
-      if (id == 0) {
-        handler.addProduct(new Product(gtin, productname, date));
-        finish();
-      } else {
-        handler.updateProduct(new Product(id, gtin, productname, date));
-        finish();
-      }
+      new DatabaseTask(new Product(id, gtin, productname, date), this, false).run();
+      finish();
     }
   }
 
