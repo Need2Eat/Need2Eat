@@ -10,11 +10,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import at.need2eat.need2eat.barcode.reader.ScannerActivity;
+import at.need2eat.need2eat.database.DatabaseHandler;
 import at.need2eat.need2eat.view.ProductAdapter;
 import at.need2eat.need2eat.view.ProductClickListener;
 import butterknife.Bind;
@@ -40,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
 
   }
 
+  private final DatabaseHandler dbHandler = new DatabaseHandler(this);
+
+  private MainClickListener clickListener = new MainClickListener();
+
   /**
    * The Toolbar used by the Android Support Library to implement an {@link android.app.ActionBar}.
    * This element is automatically injected by ButterKnife in the {@link #onCreate(Bundle)} method.
@@ -64,17 +67,25 @@ public class MainActivity extends AppCompatActivity {
     setSupportActionBar(toolbar);
 
     //Add example Products to the RecyclerView
-    List<Product> products = new ArrayList<>();
+    /*List<Product> products = new ArrayList<>();
     products.add(new Product("Milka Haselnuss Schokolade", new Date(115, 11, 22)));
     products.add(new Product("Milka Haselnuss Schokolade", new Date(115, 11, 31)));
     for (int i = 0; i < 10; i++) {
       products.add(new Product("Tolles neues Produkt", new Date(175, 0, 4)));
     }
-    products.add(new Product("Test", new Date(176, 5, 25)));
+    products.add(new Product("Test", new Date(176, 5, 25)));*/
+
+    clickListener = new MainClickListener();
+
+    List<Product> products = dbHandler.getAllProducts(false);
 
     //Add an Adapter to the RecyclerView, which will bind data from our internal database to the GUI
-    productView.setAdapter(new ProductAdapter(products, new MainClickListener()));
+    refreshAdapter(products);
     productView.setLayoutManager(new LinearLayoutManager(this));
+  }
+
+  public void refreshAdapter(List<Product> products) {
+    productView.setAdapter(new ProductAdapter(products, clickListener));
   }
 
   @Override
@@ -106,4 +117,9 @@ public class MainActivity extends AppCompatActivity {
     overridePendingTransition(R.anim.fab_in, R.anim.hold);
   }
 
+  @Override
+  protected void onResume() {
+    refreshAdapter(dbHandler.getAllProducts(false));
+    super.onResume();
+  }
 }
