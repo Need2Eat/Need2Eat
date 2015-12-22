@@ -7,10 +7,10 @@
     <string name="extra_id" translatable="false">id</string>
     <string name="extra_product" translatable="false">product</string>
 
-    <string name="action_manual">Manuell ein Produkt hinzufügen</string>
-    <string name="expires_soon">%d days left</string>
-
     <string name="message_surface">Surface zur Vorschau-Anzeige nicht verfügbar!</string>
     <string name="message_attention">Achtung!</string>
     <string name="message_okay">Okay</string>
+
+    <string name="action_add">Manuell ein Produkt hinzufügen</string>
+    <string name="action_sort">Produkte nach Datum sortieren</string>
 </resources>
