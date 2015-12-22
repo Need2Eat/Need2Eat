@@ -50,18 +50,18 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
     DROP("DROP TABLE IF EXISTS %s"),
     WHERE("%s = %d");
 
-    private String stm;
+    private String statement;
 
     /**
      * Creates a new statement with the given {@code String} as the statement
-     * @param stm the SQL statement
+     * @param statement the SQL statement
      */
-    SqlStatements(String stm) {
-      this.stm = stm;
+    SqlStatements(String statement) {
+      this.statement = statement;
     }
 
     public String with(Object... args) {
-      return String.format(stm, args);
+      return String.format(statement, args);
     }
   }
 
@@ -85,8 +85,8 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   // SQLiteOpenHelper Methods
   @Override
   public void onCreate(SQLiteDatabase db) {
-    db.execSQL(SqlStatements.CREATE.with(DatabaseHandler.TABLE_NAME,
-        ColumnName._ID, ColumnName.PRODUCTNAME, ColumnName.GTIN, ColumnName.EXPIRY_DATE));
+    db.execSQL(SqlStatements.CREATE.with(DatabaseHandler.TABLE_NAME, ColumnName._ID,
+        ColumnName.PRODUCTNAME, ColumnName.GTIN, ColumnName.EXPIRY_DATE));
   }
 
   @Override
