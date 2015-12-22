@@ -30,26 +30,11 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
    * @author Maxi Nothnagel - mx.nothnagel@gmail.com
    */
   private enum ColumnName implements BaseColumns {
-    GTIN("gtin"),
-    PRODUCTNAME("productname"),
-    EXPIRY_DATE("expiryDate");
+    GTIN, PRODUCTNAME, EXPIRY_DATE;
 
-    private String name;
-
-    /**
-     * Creates a new {@code ColumnName} with the given name
-     * @param name the name of the column
-     */
-    ColumnName(String name) {
-      this.name = name;
-    }
-
-    /**
-     * Returns the name of the column as a {@code String}
-     * @return the name of the column
-     */
-    public String getName() {
-      return this.name;
+    @Override
+    public String toString() {
+      return name().toLowerCase();
     }
   }
 
@@ -103,9 +88,8 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   // SQLiteOpenHelper Methods
   @Override
   public void onCreate(SQLiteDatabase db) {
-    db.execSQL(String
-        .format(SqlStatements.CREATE.getStatement(), DatabaseHandler.TABLE_NAME, ColumnName._ID,
-            ColumnName.PRODUCTNAME, ColumnName.GTIN, ColumnName.EXPIRY_DATE));
+    db.execSQL(String.format(SqlStatements.CREATE.getStatement(), DatabaseHandler.TABLE_NAME,
+        ColumnName._ID, ColumnName.PRODUCTNAME, ColumnName.GTIN, ColumnName.EXPIRY_DATE));
   }
 
   @Override
@@ -122,9 +106,8 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
 
     try (SQLiteDatabase database = getReadableDatabase();
          Cursor c = database.query(DatabaseHandler.TABLE_NAME,
-             new String[]{ColumnName.GTIN.getName(), ColumnName.PRODUCTNAME
-                 .getName(), ColumnName.EXPIRY_DATE.getName()},
-             null, null, null, null, null)) {
+             new String[]{ColumnName.GTIN.toString(), ColumnName.PRODUCTNAME.toString(),
+                 ColumnName.EXPIRY_DATE.toString()}, null, null, null, null, null)) {
 
       /*
       Iterate over the output rows and create a new product for every row using the information
@@ -132,12 +115,12 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
        */
       while (c.moveToNext()) {
         int id = c.getInt(c.getColumnIndex(ColumnName._ID));
-        String gtin = c.getString(c.getColumnIndex(ColumnName.GTIN.getName()));
-        String name = c.getString(c.getColumnIndex(ColumnName.PRODUCTNAME.getName()));
+        String gtin = c.getString(c.getColumnIndex(ColumnName.GTIN.toString()));
+        String name = c.getString(c.getColumnIndex(ColumnName.PRODUCTNAME.toString()));
         Date date = null;
         try {
           date = DateConverter.getDateFromString(c.getString(
-              c.getColumnIndex(ColumnName.EXPIRY_DATE.getName())));
+              c.getColumnIndex(ColumnName.EXPIRY_DATE.toString())));
         } catch (ParseException e) {
           /*
           If the date from the database could not be converted to a Date. However,
