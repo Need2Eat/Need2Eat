@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.text.ParseException;
 import java.util.Date;
 
+import at.need2eat.need2eat.database.DatabaseMode;
 import at.need2eat.need2eat.database.DatabaseTask;
 import at.need2eat.need2eat.util.DateConverter;
 import butterknife.Bind;
@@ -93,7 +94,7 @@ public class ProductActivity extends AppCompatActivity {
 
   @OnClick(R.id.deleteButton)
   public void onDeleteButtonClicked() {
-    new DatabaseTask(product, this, DatabaseTask.DatabaseMode.DELETE).run();
+    new DatabaseTask(product, this, DatabaseMode.DELETE).run();
     finish();
   }
 

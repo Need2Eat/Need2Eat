@@ -10,6 +10,7 @@ import android.widget.*;
 import java.text.ParseException;
 import java.util.Date;
 
+import at.need2eat.need2eat.database.DatabaseMode;
 import at.need2eat.need2eat.database.DatabaseTask;
 import at.need2eat.need2eat.database.OutpanManager;
 import at.need2eat.need2eat.util.DateConverter;
@@ -127,9 +128,9 @@ public class EditActivity extends AppCompatActivity {
     } else {
       Product product = new Product(id, gtin, productname, date);
       if (id == 0) {
-        new DatabaseTask(product, this, DatabaseTask.DatabaseMode.INSERT).run();
+        new DatabaseTask(product, this, DatabaseMode.INSERT).run();
       } else {
-        new DatabaseTask(product, this, DatabaseTask.DatabaseMode.UPDATE).run();
+        new DatabaseTask(product, this, DatabaseMode.UPDATE).run();
       }
       finish();
     }

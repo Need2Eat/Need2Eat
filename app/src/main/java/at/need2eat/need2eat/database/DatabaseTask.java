@@ -12,10 +12,6 @@ import at.need2eat.need2eat.Product;
  */
 public class DatabaseTask implements Runnable {
 
-  public enum DatabaseMode {
-    SELECT, SORTED_SELECT, DELETE, INSERT, UPDATE
-  }
-
   private Product product;
   private DatabaseHandler handler;
   private AdapterActivity<Product> activity;
