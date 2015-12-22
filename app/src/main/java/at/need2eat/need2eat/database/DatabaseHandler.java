@@ -134,7 +134,8 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
         result.add(new Product(id, gtin, name, date));
       }
     } catch (SQLiteException e) {
-      LogUtils.logError(context, "DatabaseHandler", "Verbindung zur Datenbank gescheitert!", e);
+      LogUtils.logError(context, DatabaseHandler.class.getSimpleName(),
+          "Verbindung zur Datenbank gescheitert!", e);
     }
 
     if (sorted) {
