@@ -18,9 +18,17 @@ public class DatabaseTask implements Runnable {
   private DatabaseMode selectedMode;
 
   /**
-   * Creates a new DatabaseTask {@code Thread}
+   * Creates a new DatabaseTask {@code Thread} for the SQL statements:
+   * <ul>
+   *   <li>{@code insert}</li>
+   *   <li>{@code update}</li>
+   *   <li>{@code delete}</li>
+   * </ul>
+   * using the {@code Product} given
    * @param product the {@code Product} you want to update, delete or insert in the database
    * @param context the {@code Context} to use, create or open the database
+   * @param selectedMode the SQL statement you want to execute (either {@link DatabaseMode#INSERT},
+   * {@link DatabaseMode#UPDATE} or {@link DatabaseMode#DELETE}
    */
   public DatabaseTask(Product product, Context context, DatabaseMode selectedMode) {
     this.product = product;
@@ -28,6 +36,12 @@ public class DatabaseTask implements Runnable {
     this.selectedMode = selectedMode;
   }
 
+  /**
+   * Creates a new DatabaseTask {@code Thread} for the {@code select} SQL statement
+   * @param activity the {@code Activity} the result of the {@code select} should be send to
+   * @param selectedMode the SQL statement you want to execute (either {@link DatabaseMode#SELECT},
+   * or {@link DatabaseMode#SORTED_SELECT}
+   */
   public DatabaseTask(AdapterActivity<Product> activity, DatabaseMode selectedMode) {
     handler = new DatabaseHandler(activity);
     this.activity = activity;
