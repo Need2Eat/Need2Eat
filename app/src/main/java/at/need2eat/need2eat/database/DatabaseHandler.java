@@ -176,7 +176,11 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
 
   @Override
   public void updateProduct(Product newProduct) {
-
+    SQLiteDatabase db = getWritableDatabase();
+    String where = String.format(
+        SqlStatements.WHERE.getStatement(), ColumnName._ID, newProduct.getID());
+    db.update(TABLE_NAME, getValuesFromProduct(newProduct), where, null);
+    db.close();
   }
 
   @Override
