@@ -12,6 +12,8 @@ import java.util.Locale;
  */
 public class DateConverter {
 
+  private static final SimpleDateFormat SDF = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
+
   /**
    * Get a {@link Date} from a {@code String}
    * @param expiryDate The {@code String} that should be converted to a {@code Date}
@@ -19,8 +21,7 @@ public class DateConverter {
    * @throws ParseException if the {@code String} could not be converted
    */
   public static Date getDateFromString(String expiryDate) throws ParseException {
-    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
-    return sdf.parse(expiryDate);
+    return SDF.parse(expiryDate);
   }
 
   /**
@@ -33,7 +34,6 @@ public class DateConverter {
     if (expiryDate == null) {
       throw new IllegalArgumentException();
     }
-    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
-    return sdf.format(expiryDate);
+    return SDF.format(expiryDate);
   }
 }
