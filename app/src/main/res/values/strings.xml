@@ -11,4 +11,5 @@
     <string name="expires_soon">%d days left</string>
 
     <string name="message_surface">Surface zur Vorschau-Anzeige nicht verfügbar!</string>
+    <string name="message_attention">Achtung!</string>
 </resources>

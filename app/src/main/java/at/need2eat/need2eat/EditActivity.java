@@ -119,8 +119,8 @@ public class EditActivity extends AppCompatActivity {
     String givenDate = dateEdit.getText().toString();
 
     if (productname.equals("") || givenDate.equals("")) {
-      LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(), "Achtung!",
-          "Alle Felder ausfüllen!");
+      LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(),
+          getResources().getString(R.string.message_attention), "Alle Felder ausfüllen!");
     } else {
       try {
         date = DateConverter.getDateFromString(givenDate);
@@ -138,10 +138,12 @@ public class EditActivity extends AppCompatActivity {
         }
         finish();
       } catch (ParseException e) {
-        LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(), "Achtung!",
+        LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(),
+            getResources().getString(R.string.message_attention),
             "Korrektes Datum angeben (TT.MM.JJJJ)!");
       } catch (IllegalArgumentException e) {
-        LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(), "Achtung!",
+        LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(),
+            getResources().getString(R.string.message_attention),
             "Produkt angeblich bereits abgelaufen!");
       }
     }
