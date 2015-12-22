@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.BaseColumns;
 
 import java.text.ParseException;
 import java.util.Collections;
@@ -30,8 +29,8 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
    * This enum provides statically defined column names of the SQLite database
    * @author Maxi Nothnagel - mx.nothnagel@gmail.com
    */
-  private enum ColumnName implements BaseColumns {
-    GTIN, PRODUCTNAME, EXPIRY_DATE;
+  private enum ColumnName {
+    _ID, GTIN, PRODUCTNAME, EXPIRY_DATE;
 
     @Override
     public String toString() {
@@ -116,7 +115,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
       from the columns
        */
       while (c.moveToNext()) {
-        int id = c.getInt(c.getColumnIndex(ColumnName._ID));
+        int id = c.getInt(c.getColumnIndex(ColumnName._ID.toString()));
         String gtin = c.getString(c.getColumnIndex(ColumnName.GTIN.toString()));
         String name = c.getString(c.getColumnIndex(ColumnName.PRODUCTNAME.toString()));
         Date date = null;
