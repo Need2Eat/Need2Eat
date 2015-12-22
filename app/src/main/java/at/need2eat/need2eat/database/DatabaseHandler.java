@@ -185,6 +185,9 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
 
   @Override
   public void deleteProduct(int id) {
-
+    SQLiteDatabase db = getWritableDatabase();
+    String where = SqlStatement.WHERE.with(ColumnName._ID, id);
+    db.delete(TABLE_NAME, where, null);
+    db.close();
   }
 }
