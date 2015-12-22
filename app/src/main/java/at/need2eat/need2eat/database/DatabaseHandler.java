@@ -107,7 +107,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
 
     try (SQLiteDatabase database = getReadableDatabase();
          Cursor c = database.query(DatabaseHandler.TABLE_NAME,
-             new String[]{ColumnName.GTIN.toString(), ColumnName.PRODUCTNAME.toString(),
+             new String[]{ColumnName._ID.toString(), ColumnName.GTIN.toString(), ColumnName.PRODUCTNAME.toString(),
                  ColumnName.EXPIRY_DATE.toString()}, null, null, null, null, null)) {
 
       /*
