@@ -117,7 +117,7 @@ public class EditActivity extends AppCompatActivity {
     productname = productnameEdit.getText().toString();
     gtin = gtinEdit.getText().toString();
     String givenDate = dateEdit.getText().toString();
-    
+
     if (productname.equals("") || givenDate.equals("")) {
       LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(), "Achtung!",
           "Alle Felder ausfüllen!");
@@ -126,6 +126,11 @@ public class EditActivity extends AppCompatActivity {
         date = DateConverter.getDateFromString(givenDate);
 
         Product product = new Product(id, gtin, productname, date);
+
+        if (product.getDaysUntilExpiry() < 0) {
+          throw new IllegalArgumentException();
+        }
+
         if (id == 0) {
           new DatabaseTask(product, this, DatabaseMode.INSERT).run();
         } else {
@@ -135,6 +140,9 @@ public class EditActivity extends AppCompatActivity {
       } catch (ParseException e) {
         LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(), "Achtung!",
             "Korrektes Datum angeben (TT.MM.JJJJ)!");
+      } catch (IllegalArgumentException e) {
+        LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(), "Achtung!",
+            "Produkt angeblich bereits abgelaufen!");
       }
     }
   }
