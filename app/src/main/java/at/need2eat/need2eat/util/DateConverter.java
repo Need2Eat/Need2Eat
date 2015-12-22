@@ -19,7 +19,7 @@ public class DateConverter {
    * @throws ParseException if the {@code String} could not be converted
    */
   public static Date getDateFromString(String expiryDate) throws ParseException {
-    SimpleDateFormat sdf = new SimpleDateFormat("dd.mm.yyyy", Locale.GERMANY);
+    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
     return sdf.parse(expiryDate);
   }
 
@@ -33,7 +33,7 @@ public class DateConverter {
     if (expiryDate == null) {
       throw new IllegalArgumentException();
     }
-    SimpleDateFormat sdf = new SimpleDateFormat("dd.mm.yyyy", Locale.GERMANY);
+    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
     return sdf.format(expiryDate);
   }
 }
