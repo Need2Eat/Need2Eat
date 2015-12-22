@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
 
+import at.need2eat.need2eat.R;
+
 /**
  * This is a utility class providing simple error logging functionality
  * @author Maxi Nothnagel - mx.nothnagel@gmail.com
@@ -26,7 +28,8 @@ public class LogUtils {
     AlertDialog dialog = new AlertDialog.Builder(context).create();
     dialog.setTitle("Fehler!");
     dialog.setMessage(msg);
-    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Okay",
+    dialog.setButton(DialogInterface.BUTTON_NEGATIVE,
+        context.getResources().getString(R.string.message_okay),
         new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
@@ -52,7 +55,8 @@ public class LogUtils {
     AlertDialog dialog = new AlertDialog.Builder(context).create();
     dialog.setTitle(title);
     dialog.setMessage(msg);
-    dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Okay",
+    dialog.setButton(DialogInterface.BUTTON_NEUTRAL,
+        context.getResources().getString(R.string.message_okay),
         new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
