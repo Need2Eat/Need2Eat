@@ -94,7 +94,10 @@ public class MainActivity extends AdapterActivity<Product> {
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         return true;
-      //Under normal circumstances, this block should never be reached
+      case R.id.action_sort:
+        mode = (mode == DatabaseMode.SELECT) ? DatabaseMode.SORTED_SELECT : DatabaseMode.SELECT;
+        loadProductsAsync();
+        // FALL-THROUGH
       default:
         return super.onOptionsItemSelected(item);
     }
