@@ -9,5 +9,4 @@
 
     <string name="action_manual">Manuell ein Produkt hinzufügen</string>
     <string name="action_sort">Produkte nach Datum sortieren</string>
-    <string name="expires_soon">%d days left</string>
 </resources>
