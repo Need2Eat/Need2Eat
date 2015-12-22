@@ -2,7 +2,6 @@ package at.need2eat.need2eat;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -26,7 +25,7 @@ import butterknife.OnClick;
  * the {@link android.support.design.widget.FloatingActionButton}.
  * @author AM307
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AdapterActivity<Product> {
 
   private class MainClickListener implements ProductClickListener {
 
@@ -84,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
     productView.setLayoutManager(new LinearLayoutManager(this));
   }
 
+  @Override
   public void refreshAdapter(List<Product> products) {
     productView.setAdapter(new ProductAdapter(products, clickListener));
   }
