@@ -1,7 +1,8 @@
 package at.need2eat.need2eat.database;
 
 /**
- * Created by AM307 on 22.12.2015.
+ * This enum provides statically defined SQL statement modes
+ * @author Maxi Nothnagel - mx.nothnagel
  */
 public enum DatabaseMode {
   SELECT, SORTED_SELECT, DELETE, INSERT, UPDATE
