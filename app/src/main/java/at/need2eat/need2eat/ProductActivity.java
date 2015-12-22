@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.text.ParseException;
 import java.util.Date;
 
-import at.need2eat.need2eat.database.DatabaseHandler;
+import at.need2eat.need2eat.database.DatabaseTask;
 import at.need2eat.need2eat.util.DateConverter;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,6 +33,7 @@ public class ProductActivity extends AppCompatActivity {
   @Bind(R.id.editButton) protected LinearLayout EDIT_BUTTON;
 
   private int id;
+  private Product product;
 
   Resources resources;
 
@@ -54,7 +55,7 @@ public class ProductActivity extends AppCompatActivity {
     Intent intent = getIntent();
     Bundle bundle = intent.getExtras();
 
-    Product product = (Product) bundle.get(resources.getString(R.string.extra_product));
+    product = (Product) bundle.get(resources.getString(R.string.extra_product));
     id = product.getID();
     setTextviewAblauf(product.getExpiryDate());
     setTextviewGTIN(product.getGTIN());
@@ -92,9 +93,7 @@ public class ProductActivity extends AppCompatActivity {
 
   @OnClick(R.id.deleteButton)
   public void onDeleteButtonClicked() {
-    DatabaseHandler handler = new DatabaseHandler(this);
-    handler.deleteProduct(id);
-
+    new DatabaseTask(product, this, true).run();
     finish();
   }
 
