@@ -148,7 +148,7 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
       camera.startPreview();
     } catch (IOException e) {
       dialog = LogUtils.logError(getContext(), getClass().getSimpleName(),
-          "Surface zur Vorschau-Anzeige nicht verfügbar!", e);
+          getResources().getString(R.string.message_surface), e);
 
       dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
         @Override
@@ -177,7 +177,7 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
         camera.setPreviewDisplay(holder);
       } catch (IOException e) {
         dialog = LogUtils.logError(getContext(), getClass().getSimpleName(),
-            "Surface zur Vorschau-Anzeige nicht verfügbar!", e);
+            getResources().getString(R.string.message_surface), e);
 
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
           @Override

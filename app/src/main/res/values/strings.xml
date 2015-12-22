@@ -9,4 +9,6 @@
 
     <string name="action_manual">Manuell ein Produkt hinzufügen</string>
     <string name="expires_soon">%d days left</string>
+
+    <string name="message_surface">Surface zur Vorschau-Anzeige nicht verfügbar!</string>
 </resources>
