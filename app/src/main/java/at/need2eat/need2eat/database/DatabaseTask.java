@@ -32,8 +32,7 @@ public class DatabaseTask implements Runnable {
     this.selectedMode = selectedMode;
   }
 
-  public DatabaseTask(Product product, AdapterActivity<Product> activity, DatabaseMode selectedMode) {
-    this.product = product;
+  public DatabaseTask(AdapterActivity<Product> activity, DatabaseMode selectedMode) {
     handler = new DatabaseHandler(activity);
     this.activity = activity;
     this.selectedMode = selectedMode;
