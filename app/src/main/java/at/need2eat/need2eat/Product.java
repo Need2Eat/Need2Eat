@@ -3,6 +3,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import at.need2eat.need2eat.util.DateConverter;
+
 /**
  * This class contains information about the product and a ID, which makes every product unique.
  * @author Sebastian Feistl
@@ -124,6 +126,14 @@ public class Product implements Serializable {
    */
   public Date getExpiryDate() {
     return this.expiryDate;
+  }
+
+  /**
+   * Get this Product's expiry date as a String.
+   * @return a String representation of this Product's expiry date
+   */
+  public String getExpiryDateString() {
+    return DateConverter.getStringFromDate(expiryDate);
   }
 
   /**
