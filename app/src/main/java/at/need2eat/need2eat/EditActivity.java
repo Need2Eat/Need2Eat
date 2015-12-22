@@ -116,23 +116,26 @@ public class EditActivity extends AppCompatActivity {
   public void onAcceptButtonClicked() {
     productname = productnameEdit.getText().toString();
     gtin = gtinEdit.getText().toString();
-    try {
-      date = DateConverter.getDateFromString(dateEdit.getText().toString());
-    } catch (ParseException e) {
-      date = null;
-    }
-
-    if (productname.equals("") || date == null) {
+    String givenDate = dateEdit.getText().toString();
+    
+    if (productname.equals("") || givenDate.equals("")) {
       LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(), "Achtung!",
-          "Bitte alle Felder ausfüllen!");
+          "Alle Felder ausfüllen!");
     } else {
-      Product product = new Product(id, gtin, productname, date);
-      if (id == 0) {
-        new DatabaseTask(product, this, DatabaseMode.INSERT).run();
-      } else {
-        new DatabaseTask(product, this, DatabaseMode.UPDATE).run();
+      try {
+        date = DateConverter.getDateFromString(givenDate);
+
+        Product product = new Product(id, gtin, productname, date);
+        if (id == 0) {
+          new DatabaseTask(product, this, DatabaseMode.INSERT).run();
+        } else {
+          new DatabaseTask(product, this, DatabaseMode.UPDATE).run();
+        }
+        finish();
+      } catch (ParseException e) {
+        LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(), "Achtung!",
+            "Korrektes Datum angeben (TT.MM.JJJJ)!");
       }
-      finish();
     }
   }
 
