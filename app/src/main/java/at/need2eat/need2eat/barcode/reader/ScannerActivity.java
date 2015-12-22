@@ -13,7 +13,7 @@ import at.need2eat.need2eat.util.LogUtils;
 import at.need2eat.need2eat.R;
 
 /**
- * This class contains the interface of the {@code ScannerActivity} which is used to start the
+ * This class contains the interface of the {@code ScannerActivity} which is used to start the 
  * camera via a {@link CameraManager} that scans a barcode.
  * @author Maxi Nothnagel - mx.nothnagel@gmail.com
  */
@@ -48,7 +48,7 @@ public class ScannerActivity extends AppCompatActivity {
       FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
       preview.addView(camPreview);
     }  catch (CameraNotFoundException e) {
-      AlertDialog alert = LogUtils.logError(this, "ScannerActivity",
+      AlertDialog alert = LogUtils.logError(this, ScannerActivity.class.getSimpleName(),
           "Ihr Handy ist nicht mit unserem Barcode-Scanner kompatibel, da es keine Kamera besitzt!",
           e);
 
@@ -59,7 +59,7 @@ public class ScannerActivity extends AppCompatActivity {
         }
       });
     } catch (CameraNotAccessibleException e) {
-      AlertDialog alert = LogUtils.logError(this, "ScannerActivity",
+      AlertDialog alert = LogUtils.logError(this, ScannerActivity.class.getSimpleName(),
           "Kamera ist nicht verfügbar! Eventuell andere Anwendungen schließen!", e);
 
       alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
