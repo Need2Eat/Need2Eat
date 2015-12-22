@@ -2,6 +2,7 @@ package at.need2eat.need2eat.database;
 
 import android.content.Context;
 
+import at.need2eat.need2eat.AdapterActivity;
 import at.need2eat.need2eat.Product;
 
 /**
@@ -11,33 +12,57 @@ import at.need2eat.need2eat.Product;
  */
 public class DatabaseTask implements Runnable {
 
+  public enum DatabaseMode {
+    SELECT, SORTED_SELECT, DELETE, INSERT, UPDATE
+  }
+
   private Product product;
   private DatabaseHandler handler;
-  private boolean delete;
+  private AdapterActivity<Product> activity;
+  private DatabaseMode selectedMode;
 
   /**
    * Creates a new DatabaseTask {@code Thread}
    * @param product the {@code Product} you want to update, delete or insert in the database
    * @param context the {@code Context} to use, create or open the database
-   * @param delete {@code true} if the given {@code Product} should be deleted from the database
    */
-  public DatabaseTask(Product product, Context context, boolean delete) {
+  public DatabaseTask(Product product, Context context, DatabaseMode selectedMode) {
     this.product = product;
     handler = new DatabaseHandler(context);
-    this.delete = delete;
+    this.selectedMode = selectedMode;
+  }
+
+  public DatabaseTask(Product product, AdapterActivity<Product> activity, DatabaseMode selectedMode) {
+    this.product = product;
+    handler = new DatabaseHandler(activity);
+    this.activity = activity;
+    this.selectedMode = selectedMode;
   }
 
   @Override
   public void run() {
-    if (delete) {
-      handler.deleteProduct(product.getID());
-    } else {
-      if (product.getID() == 0) {
-        handler.addProduct(new Product(product.getGTIN(), product.getName(),
-            product.getExpiryDate()));
-      } else {
+    switch (selectedMode) {
+      case SELECT:
+        activity.refreshAdapter(handler.getAllProducts(false));
+        break;
+      case SORTED_SELECT:
+        activity.refreshAdapter(handler.getAllProducts(true));
+        break;
+      case DELETE:
+        handler.deleteProduct(product.getID());
+        break;
+      case INSERT:
+        handler.addProduct(product);
+        break;
+      case UPDATE:
         handler.updateProduct(product);
-      }
+        break;
+      default:
+        /*
+        This default block should not be reachable. However, if it is reached, a
+        IllegalArgumentException gets thrown
+         */
+        throw new IllegalArgumentException();
     }
     handler.close();
   }

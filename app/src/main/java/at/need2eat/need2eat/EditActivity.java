@@ -125,7 +125,12 @@ public class EditActivity extends AppCompatActivity {
       LogUtils.logInformation(EditActivity.this, EditActivity.class.getSimpleName(), "Achtung!",
           "Bitte alle Felder ausfüllen!");
     } else {
-      new DatabaseTask(new Product(id, gtin, productname, date), this, false).run();
+      Product product = new Product(gtin, productname, date);
+      if (id == 0) {
+        new DatabaseTask(product, this, DatabaseTask.DatabaseMode.INSERT).run();
+      } else {
+        new DatabaseTask(product, this, DatabaseTask.DatabaseMode.UPDATE).run();
+      }
       finish();
     }
   }
