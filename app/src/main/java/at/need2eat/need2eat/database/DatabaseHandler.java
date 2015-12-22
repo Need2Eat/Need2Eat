@@ -60,12 +60,8 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
       this.stm = stm;
     }
 
-    /**
-     * Returns the statement as a {@code String}
-     * @return the statement
-     */
-    public String getStatement() {
-      return this.stm;
+    public String with(Object... args) {
+      return String.format(stm, args);
     }
   }
 
@@ -89,14 +85,14 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   // SQLiteOpenHelper Methods
   @Override
   public void onCreate(SQLiteDatabase db) {
-    db.execSQL(String.format(SqlStatements.CREATE.getStatement(), DatabaseHandler.TABLE_NAME,
+    db.execSQL(SqlStatements.CREATE.with(DatabaseHandler.TABLE_NAME,
         ColumnName._ID, ColumnName.PRODUCTNAME, ColumnName.GTIN, ColumnName.EXPIRY_DATE));
   }
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     // Drop old tables and create the new ones
-    db.execSQL(String.format(SqlStatements.DROP.getStatement(), DatabaseHandler.TABLE_NAME));
+    db.execSQL(SqlStatements.DROP.with(DatabaseHandler.TABLE_NAME));
     onCreate(db);
   }
 
@@ -177,8 +173,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   @Override
   public void updateProduct(Product newProduct) {
     SQLiteDatabase db = getWritableDatabase();
-    String where = String.format(
-        SqlStatements.WHERE.getStatement(), ColumnName._ID, newProduct.getID());
+    String where = SqlStatements.WHERE.with(ColumnName._ID, newProduct.getID());
     db.update(TABLE_NAME, getValuesFromProduct(newProduct), where, null);
     db.close();
   }
