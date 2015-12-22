@@ -93,7 +93,7 @@ public class ProductActivity extends AppCompatActivity {
 
   @OnClick(R.id.deleteButton)
   public void onDeleteButtonClicked() {
-    new DatabaseTask(product, this, true).run();
+    new DatabaseTask(product, this, DatabaseTask.DatabaseMode.DELETE).run();
     finish();
   }
 
