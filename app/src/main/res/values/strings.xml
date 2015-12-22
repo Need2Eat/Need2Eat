@@ -7,6 +7,6 @@
     <string name="extra_id" translatable="false">id</string>
     <string name="extra_product" translatable="false">product</string>
 
-    <string name="action_manual">Add a product manually</string>
+    <string name="action_manual">Manuell ein Produkt hinzufügen</string>
     <string name="expires_soon">%d days left</string>
 </resources>
