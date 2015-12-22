@@ -60,6 +60,11 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
       this.statement = statement;
     }
 
+    /**
+     * Formats the SQL statement behind this object with the parameters given.
+     * @param args the list of arguments passed to the formatter
+     * @return a SQL statement in form of a formatted String
+     */
     public String with(Object... args) {
       return String.format(statement, args);
     }
