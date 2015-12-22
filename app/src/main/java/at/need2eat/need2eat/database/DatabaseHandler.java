@@ -30,7 +30,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
    * @author Maxi Nothnagel - mx.nothnagel@gmail.com
    */
   private enum ColumnName {
-    _ID, GTIN, PRODUCTNAME, EXPIRY_DATE;
+    ROWID, _ID, GTIN, PRODUCTNAME, EXPIRY_DATE;
 
     @Override
     public String toString() {
@@ -44,7 +44,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
    */
   private enum SqlStatement {
     CREATE("CREATE TABLE IF NOT EXISTS %s ("
-        + "%s int auto_increment primary key, %s varchar(400) not null,"
+        + "%s int primary key, %s varchar(400) not null,"
         + "%s varchar(100), %s char(10))"),
     DROP("DROP TABLE IF EXISTS %s"),
     WHERE("%s = %d");
@@ -106,16 +106,17 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
     List<Product> result = new LinkedList<>();
 
     try (SQLiteDatabase database = getReadableDatabase();
-         Cursor c = database.query(DatabaseHandler.TABLE_NAME,
-             new String[]{ColumnName._ID.toString(), ColumnName.GTIN.toString(), ColumnName.PRODUCTNAME.toString(),
-                 ColumnName.EXPIRY_DATE.toString()}, null, null, null, null, null)) {
+         Cursor c = database.query(DatabaseHandler.TABLE_NAME, new String[]{
+             ColumnName.ROWID.toString(), ColumnName.GTIN.toString(),
+             ColumnName.PRODUCTNAME.toString(), ColumnName.EXPIRY_DATE.toString()
+         }, null, null, null, null, null)) {
 
       /*
       Iterate over the output rows and create a new product for every row using the information
       from the columns
        */
       while (c.moveToNext()) {
-        int id = c.getInt(c.getColumnIndex(ColumnName._ID.toString()));
+        int id = c.getInt(0);
         String gtin = c.getString(c.getColumnIndex(ColumnName.GTIN.toString()));
         String name = c.getString(c.getColumnIndex(ColumnName.PRODUCTNAME.toString()));
         Date date = null;
@@ -177,7 +178,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   @Override
   public void updateProduct(Product newProduct) {
     SQLiteDatabase db = getWritableDatabase();
-    String where = SqlStatement.WHERE.with(ColumnName._ID, newProduct.getID());
+    String where = SqlStatement.WHERE.with(ColumnName.ROWID, newProduct.getID());
     db.update(TABLE_NAME, getValuesFromProduct(newProduct), where, null);
     db.close();
   }
@@ -185,7 +186,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   @Override
   public void deleteProduct(int id) {
     SQLiteDatabase db = getWritableDatabase();
-    String where = SqlStatement.WHERE.with(ColumnName._ID, id);
+    String where = SqlStatement.WHERE.with(ColumnName.ROWID, id);
     db.delete(TABLE_NAME, where, null);
     db.close();
   }
