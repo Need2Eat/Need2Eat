@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import java.util.List;
 
 import at.need2eat.need2eat.barcode.reader.ScannerActivity;
-import at.need2eat.need2eat.database.DatabaseHandler;
+import at.need2eat.need2eat.database.DatabaseTask;
 import at.need2eat.need2eat.view.ProductAdapter;
 import at.need2eat.need2eat.view.ProductClickListener;
 import butterknife.Bind;
@@ -37,8 +37,6 @@ public class MainActivity extends AdapterActivity<Product> {
     }
 
   }
-
-  private final DatabaseHandler dbHandler = new DatabaseHandler(this);
 
   private MainClickListener clickListener = new MainClickListener();
 
@@ -65,22 +63,13 @@ public class MainActivity extends AdapterActivity<Product> {
     //Provide the Toolbar injected by ButterKnife as a substitute for the ActionBar
     setSupportActionBar(toolbar);
 
-    //Add example Products to the RecyclerView
-    /*List<Product> products = new ArrayList<>();
-    products.add(new Product("Milka Haselnuss Schokolade", new Date(115, 11, 22)));
-    products.add(new Product("Milka Haselnuss Schokolade", new Date(115, 11, 31)));
-    for (int i = 0; i < 10; i++) {
-      products.add(new Product("Tolles neues Produkt", new Date(175, 0, 4)));
-    }
-    products.add(new Product("Test", new Date(176, 5, 25)));*/
-
     clickListener = new MainClickListener();
 
-    List<Product> products = dbHandler.getAllProducts(false);
-
-    //Add an Adapter to the RecyclerView, which will bind data from our internal database to the GUI
-    refreshAdapter(products);
     productView.setLayoutManager(new LinearLayoutManager(this));
+  }
+
+  private void loadProductsAsync() {
+    new DatabaseTask(this, DatabaseTask.DatabaseMode.SELECT).run();
   }
 
   @Override
@@ -119,7 +108,7 @@ public class MainActivity extends AdapterActivity<Product> {
 
   @Override
   protected void onResume() {
-    refreshAdapter(dbHandler.getAllProducts(false));
+    loadProductsAsync();
     super.onResume();
   }
 }
