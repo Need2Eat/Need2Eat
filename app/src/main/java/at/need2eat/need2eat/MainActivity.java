@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import java.util.List;
 
 import at.need2eat.need2eat.barcode.reader.ScannerActivity;
+import at.need2eat.need2eat.database.DatabaseMode;
 import at.need2eat.need2eat.database.DatabaseTask;
 import at.need2eat.need2eat.view.ProductAdapter;
 import at.need2eat.need2eat.view.ProductClickListener;
@@ -40,6 +41,8 @@ public class MainActivity extends AdapterActivity<Product> {
 
   private MainClickListener clickListener = new MainClickListener();
 
+  private DatabaseMode mode = DatabaseMode.SELECT;
+
   /**
    * The Toolbar used by the Android Support Library to implement an {@link android.app.ActionBar}.
    * This element is automatically injected by ButterKnife in the {@link #onCreate(Bundle)} method.
@@ -63,13 +66,11 @@ public class MainActivity extends AdapterActivity<Product> {
     //Provide the Toolbar injected by ButterKnife as a substitute for the ActionBar
     setSupportActionBar(toolbar);
 
-    clickListener = new MainClickListener();
-
     productView.setLayoutManager(new LinearLayoutManager(this));
   }
 
   private void loadProductsAsync() {
-    new DatabaseTask(this, DatabaseTask.DatabaseMode.SELECT).run();
+    new DatabaseTask(this, mode).run();
   }
 
   @Override
