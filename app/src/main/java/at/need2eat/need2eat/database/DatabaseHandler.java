@@ -43,7 +43,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
    * This enum provides statically defined SQL statements or parts of SQL statements
    * @author Maxi Nothnagel - mx.nothnagel@gmail.com
    */
-  private enum SqlStatements {
+  private enum SqlStatement {
     CREATE("CREATE TABLE IF NOT EXISTS %s ("
         + "%s int auto_increment primary key, %s varchar(400) not null,"
         + "%s varchar(100), %s char(10))"),
@@ -56,7 +56,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
      * Creates a new statement with the given {@code String} as the statement
      * @param statement the SQL statement
      */
-    SqlStatements(String statement) {
+    SqlStatement(String statement) {
       this.statement = statement;
     }
 
@@ -90,14 +90,14 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   // SQLiteOpenHelper Methods
   @Override
   public void onCreate(SQLiteDatabase db) {
-    db.execSQL(SqlStatements.CREATE.with(DatabaseHandler.TABLE_NAME, ColumnName._ID,
+    db.execSQL(SqlStatement.CREATE.with(DatabaseHandler.TABLE_NAME, ColumnName._ID,
         ColumnName.PRODUCTNAME, ColumnName.GTIN, ColumnName.EXPIRY_DATE));
   }
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     // Drop old tables and create the new ones
-    db.execSQL(SqlStatements.DROP.with(DatabaseHandler.TABLE_NAME));
+    db.execSQL(SqlStatement.DROP.with(DatabaseHandler.TABLE_NAME));
     onCreate(db);
   }
 
@@ -178,7 +178,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
   @Override
   public void updateProduct(Product newProduct) {
     SQLiteDatabase db = getWritableDatabase();
-    String where = SqlStatements.WHERE.with(ColumnName._ID, newProduct.getID());
+    String where = SqlStatement.WHERE.with(ColumnName._ID, newProduct.getID());
     db.update(TABLE_NAME, getValuesFromProduct(newProduct), where, null);
     db.close();
   }
