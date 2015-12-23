@@ -43,7 +43,7 @@ public class ScannerActivity extends AppCompatActivity {
     try {
       manager = new CameraManager();
       camPreview = new CameraPreview(this, manager.getCamera());
-      camPreview.setArea(view.getHoverLeft(), view.getHoverTop(), size.x);
+      // camPreview.setArea(view.getHoverLeft(), view.getHoverTop(), size.x);
 
       FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
       preview.addView(camPreview);

@@ -52,8 +52,8 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
       }
 
       LuminanceSource source =
-          new PlanarYUVLuminanceSource(data, width, height, left, top,
-              areaWidth, areaHeight, false);
+          new PlanarYUVLuminanceSource(data, width, height, 0, 0,
+              width, height, false);
       BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
       Result result;
 
@@ -69,15 +69,23 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
           Intent intent = new Intent(context, EditActivity.class);
 
           Date expiryDate = null;
+          String id = null;
 
           try {
+            id = expandedResult.getProductID();
             expiryDate = DateConverter.getDateFromString(expandedResult.getExpirationDate());
           } catch (ParseException e) {
             // If an error occurs the date should stay null
+          } catch (NullPointerException e) {
+            /*
+            If the result could not be parsed to an ExpandedProductParsedResult, the date stays null
+            and the product id becomes the text of the normal result
+             */
+            id = result.getText();
           }
 
           intent.putExtra(resources.getString(R.string.extra_product),
-              new Product(expandedResult.getProductID(), null, expiryDate));
+              new Product(id, null, expiryDate));
           context.startActivity(intent);
           ((Activity) context).finish();
         }
@@ -93,12 +101,8 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
   }
 
   // These values represent measurements of the display
-  private int width;
-  private int height;
-  private int left;
-  private int top;
-  private int areaWidth;
-  private int areaHeight;
+  private int width = 640;
+  private int height = 480;
 
   // The ZXing reader and decoder for barcodes
   private MultiFormatReader reader;
@@ -126,9 +130,6 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     holder.addCallback(this);
 
     Parameters params = camera.getParameters();
-
-    width = 480;
-    height = 640;
 
     params.setPreviewSize(width, height);
     camera.setParameters(params);
@@ -218,19 +219,5 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
       camera.release();
       camera = null;
     }
-  }
-
-  /**
-   * Sets the area size for the preview frames of the camera
-   * @param left The left offset
-   * @param top The top offset
-   * @param width The width of the display
-   */
-  public void setArea(int left, int top, int width) {
-    double ratio = width / this.width;
-    this.left = (int) (left / (ratio + 1));
-    this.top = (int)  (top / (ratio + 1));
-    this.areaWidth = this.width - this.left * 2;
-    this.areaHeight = this.width - this.left * 2;
   }
 }
