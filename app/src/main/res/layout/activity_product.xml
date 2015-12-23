@@ -37,11 +37,10 @@
                     android:gravity="left"
                     >
 
-                    <!-- IMPORTANT: This icon is only used for demonstration. Please change to "go back" icon -->
                     <LinearLayout
                         android:id="@+id/backButton"
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_marginTop="15dp"
                         android:layout_marginLeft="15dp"
                         android:background="@drawable/ic_arrow_back"
@@ -60,8 +59,8 @@
 
                     <LinearLayout
                         android:id="@+id/deleteButton"
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_marginTop="15dp"
                         android:layout_marginRight="15dp"
                         android:background="@drawable/ic_delete"
@@ -80,8 +79,8 @@
 
                     <LinearLayout
                         android:id="@+id/editButton"
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_marginTop="15dp"
                         android:layout_marginRight="15dp"
                         android:background="@drawable/ic_mode_edit"
@@ -113,8 +112,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Item 1 "
-                    android:textSize="35sp"
-                    android:id="@+id/TextviewName"/>
+                    android:textSize="24sp"
+                    android:id="@+id/TextviewName"
+                    android:textColor="@color/textPrimaryDark"
+                    />
 
             </LinearLayout>
 

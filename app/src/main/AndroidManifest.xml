@@ -27,6 +27,7 @@
 
         <activity
             android:name=".EditActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="nosensor"/>
         
         <activity
