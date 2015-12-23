@@ -59,7 +59,7 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
       }
 
       LuminanceSource source =
-          new PlanarYUVLuminanceSource(data, height, width, 0, 0,
+          new PlanarYUVLuminanceSource(rotatedData, height, width, 0, 0,
               height, width, false);
       BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
       Result result;
