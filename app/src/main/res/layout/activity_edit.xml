@@ -93,6 +93,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:textColor="@color/textPrimaryDark"
+                    android:backgroundTint="@color/textPrimaryDark"
                     />
 
             </LinearLayout>
