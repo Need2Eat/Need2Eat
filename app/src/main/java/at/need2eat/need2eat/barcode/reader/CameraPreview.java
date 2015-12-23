@@ -51,9 +51,16 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
         return;
       }
 
+      byte[] rotatedData = new byte[data.length];
+      for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+          rotatedData[x * height + height - y - 1] = data[x + y * width];
+        }
+      }
+
       LuminanceSource source =
-          new PlanarYUVLuminanceSource(data, width, height, 0, 0,
-              width, height, false);
+          new PlanarYUVLuminanceSource(data, height, width, 0, 0,
+              height, width, false);
       BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
       Result result;
 
@@ -86,8 +93,9 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
           intent.putExtra(resources.getString(R.string.extra_product),
               new Product(id, null, expiryDate));
-          context.startActivity(intent);
+
           ((Activity) context).finish();
+          context.startActivity(intent);
         }
 
       } catch (NotFoundException e) {
