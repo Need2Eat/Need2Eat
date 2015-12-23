@@ -16,11 +16,6 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"/>
 
-        <at.need2eat.need2eat.barcode.reader.HoverView
-            android:id="@+id/hover_view"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"/>
-
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>
