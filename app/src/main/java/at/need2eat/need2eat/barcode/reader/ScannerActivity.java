@@ -21,7 +21,6 @@ public class ScannerActivity extends AppCompatActivity {
 
   private CameraPreview camPreview;
   private CameraManager manager;
-  private HoverView view;
 
   /**
    * Auto-generated function that initializes the layout of this class. Furthermore, it starts
@@ -35,10 +34,8 @@ public class ScannerActivity extends AppCompatActivity {
 
     setContentView(R.layout.activity_scanner);
     Display display = getWindowManager().getDefaultDisplay();
-    view = (HoverView) findViewById(R.id.hover_view);
     Point size = new Point();
     display.getSize(size);
-    view.update(size.x, size.y);
 
     try {
       manager = new CameraManager();
