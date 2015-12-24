@@ -87,6 +87,6 @@ public class OutpanManager implements OutpanHandler {
     }
 
     // Return the name of the product or an empty String if the name could not be found
-    return result.get("name").getAsString();
+    return result.get("name").isJsonNull() ? "" : result.get("name").getAsString();
   }
 }
