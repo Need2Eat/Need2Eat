@@ -4,56 +4,50 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import junit.framework.TestCase;
 
-import at.need2eat.need2eat.Product;
-import at.need2eat.need2eat.database.OutpanHandler;
 import at.need2eat.need2eat.database.OutpanManager;
-/**
- * import static org.junit.Assert.assertEquals;
-
- import org.json.JSONException;
- import org.junit.AfterClass;
- import org.junit.BeforeClass;
- import org.junit.Test;
- */
 
 
 
 /**
- * Created by Tomi on 11.12.2015.
+ * @author Tomi Mijatovic
  */
 public class OutpanManagerTest extends TestCase {
   private static String api_key = "21695344493be75568b4c42ef6b80d99";
 
-  OutpanManager om1 = new OutpanManager(api_key);
+  OutpanManager manager = new OutpanManager(api_key);
 
   protected void setUp() throws Exception {
     super.setUp();
   }
 
-    @SmallTest
-    public void testOutpanManager1(){
-      String p1 = om1.getName("5900190004954");
-      assertEquals("KRAKUS", p1);
-    }
-    @SmallTest
-    public void testOutpanManager2(){
-      String p1 = om1.getName("5099837089798");
-      assertEquals("Jack Daniels", p1);
-    }
-    @SmallTest
-    public void testOutpanManager3(){
-      String p1 = om1.getName("43882236");
-      assertEquals("MC Illroy", p1);
-    }
-    @SmallTest
-    public void testOutpanManager4(){
-      String p1 = om1.getName("01781761414");
-      assertEquals("BOSE QC3", p1);
-    }
+  @SmallTest
+  public void testOutpan1() {;
+    assertEquals("", manager.getName("9002244132272").toLowerCase());
+  }
 
-    protected void tearDown() throws Exception {
-      super.tearDown();
-    }
+  @SmallTest
+  public void testOutpan2() {
+    assertEquals("krakus", manager.getName("5900190004954").toLowerCase());
+  }
+
+  @SmallTest
+  public void testOutpan3() {
+    assertEquals("rauch eistee zitrone", manager.getName("90020742").toLowerCase());
+  }
+
+  @SmallTest
+  public void testOutpan4() {
+    assertEquals("bahlsen lebkuchen herzen und sterne", manager.getName("4017100851919").toLowerCase());
+  }
+
+  @SmallTest
+  public void testOutpan5() {
+    assertEquals("", manager.getName(null));
+  }
+
+  protected void tearDown() throws Exception {
+    super.tearDown();
+  }
 
 
 }
