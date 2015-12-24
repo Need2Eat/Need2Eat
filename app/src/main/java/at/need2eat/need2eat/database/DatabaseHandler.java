@@ -154,6 +154,17 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseManager
     return result;
   }
 
+  /**
+   * Gets the values of a {@link Product} and returns it as a {@code ContentValues} object. These
+   * values are:
+   * <ul>
+   *   <li>{@code gtin} - the GTIN of the {@code Product}</li>
+   *   <li>{@code expiryDate} - the expiration date of the {@code Product}</li>
+   *   <li>{@code productname} - the name of the {@code Product}</li>
+   * </ul>
+   * @param product the {@code Product} that is used
+   * @return the values of the {@code Product}
+   */
   private ContentValues getValuesFromProduct(Product product) {
     ContentValues content = new ContentValues();
     String[] keys = new String[] {
