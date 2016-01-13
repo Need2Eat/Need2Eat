@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.*;
 
 import java.text.ParseException;
@@ -47,9 +49,24 @@ public class EditActivity extends AppCompatActivity {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-      productnameEdit.setText(
-          (productname.equals("")) ? "Produktname nicht gefunden!" : productname
-      );
+      if (productname.equals("")) {
+        productnameEdit.setHint(getResources().getString(R.string.no_name_hint));
+
+        productnameEdit.addTextChangedListener(new TextWatcher() {
+          @Override
+          public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            productnameEdit.setHint("");
+          }
+
+          @Override
+          public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+          @Override
+          public void afterTextChanged(Editable s) {}
+        });
+      } else {
+        productnameEdit.setText(productname);
+      }
     }
   }
 
