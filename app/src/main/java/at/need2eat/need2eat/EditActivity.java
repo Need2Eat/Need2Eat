@@ -47,7 +47,9 @@ public class EditActivity extends AppCompatActivity {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-      productnameEdit.setText(productname);
+      productnameEdit.setText(
+          (productname.equals("")) ? "Produktname nicht gefunden!" : productname
+      );
     }
   }
 
