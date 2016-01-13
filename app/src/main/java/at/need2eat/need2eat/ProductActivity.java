@@ -99,7 +99,7 @@ public class ProductActivity extends AppCompatActivity {
   }
 
   @OnClick(R.id.editButton)
-  public void onAcceptButtonClicked() {
+  public void onEditButtonClicked() {
     Intent intent = new Intent(ProductActivity.this, EditActivity.class);
 
     Date date;
