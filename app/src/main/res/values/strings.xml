@@ -13,4 +13,6 @@
 
     <string name="action_add">Manuell ein Produkt hinzufügen</string>
     <string name="action_sort">Produkte nach Datum sortieren</string>
+
+    <string name="no_name_hint">Kein Name vorhanden</string>
 </resources>
