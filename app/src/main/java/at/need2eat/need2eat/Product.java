@@ -38,6 +38,14 @@ public class Product implements Serializable {
   private Date expiryDate;
 
   /**
+   * Constructs a new Product with the given GTIN
+   * @param gtin of the product
+   */
+  public Product(String gtin) {
+    this.gtin = gtin;
+  }
+
+  /**
    * Constructs a new Product with the name of the Product as a string and the expiryDate
    * @param name of the product
    * @param expiryDate of the product
@@ -47,8 +55,8 @@ public class Product implements Serializable {
     this.expiryDate = expiryDate;
   }
   /**
-   * Constructs a new Product with a barcode (GTIN) as String, a name and expiryDate
-   * @param gtin is the barcode of the product
+   * Constructs a new Product with a GTIN as String, a name and expiryDate
+   * @param gtin is the GTIN of the product
    * @param name of the product
    * @param expiryDate of the product
    */
@@ -59,9 +67,9 @@ public class Product implements Serializable {
   }
 
   /**
-   * Constructs a new Product with a unique ID, a barcode (GTIN) as String, a name and expiryDate
+   * Constructs a new Product with a unique ID, a GTIN as String, a name and expiryDate
    * @param id is a unique number which identifies the product
-   * @param gtin is the barcode of the product
+   * @param gtin is the GTIN of the product
    * @param name of the product
    * @param expiryDate of the product
    */
