@@ -13,18 +13,19 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.google.zxing.BinaryBitmap;
+import com.google.zxing.DecodeHintType;
 import com.google.zxing.LuminanceSource;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.PlanarYUVLuminanceSource;
 import com.google.zxing.Result;
-import com.google.zxing.client.result.ExpandedProductParsedResult;
-import com.google.zxing.client.result.ExpandedProductResultParser;
 import com.google.zxing.common.HybridBinarizer;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import at.need2eat.need2eat.EditActivity;
 import at.need2eat.need2eat.Product;
@@ -36,9 +37,9 @@ import at.need2eat.need2eat.R;
  * This class creates a new {@link SurfaceView} which is used to draw the preview frames of the
  * image captures by the {@link Camera}. These preview frames are converted to a
  * {@link BinaryBitmap} and decoded by a {@link MultiFormatReader}. The decoded {@link Result} is
- * parsed into an {@link ExpandedProductParsedResult} which contains further information about the
- * product. This {@code ExpandedProductParsedResult} is sent to the {@link EditActivity} to insert
- * a new product.
+ * analysed whether it is a GS1-128 code and split into its AIs ("Application Identifiers"). If it
+ * is a GS1, it contains further information we extract from it. However, no matter what barcode it
+ * is, the information is sent to the {@link EditActivity} to insert a new product.
  * @author Maxi Nothnagel - mx.nothnagel@gmail.com
  */
 class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
@@ -65,34 +66,33 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
       Result result;
 
       try {
-        result = reader.decode(bitmap, null);
+        Map<DecodeHintType, Object> hints = new HashMap<>();
+        hints.put(DecodeHintType.ASSUME_GS1, Boolean.TRUE);
+        result = reader.decode(bitmap, hints);
 
         if (result != null) {
-          ExpandedProductResultParser parser = new ExpandedProductResultParser();
-          ExpandedProductParsedResult expandedResult = parser.parse(result);
-
           Resources resources = getResources();
-
           Intent intent = new Intent(context, EditActivity.class);
+          String id;
 
-          Date expiryDate = null;
-          String id = null;
+          if (result.getText().contains("]C1") || result.getText().contains("\u001D")) {
+            // a GS1-128 barcode containing the additional information we want
+            Map<String, String> values = BarcodeAi.findAiValues(result.getText());
+            id = values.get("01");
+            String dateKey = (values.containsKey("17")) ? values.get("17") : values.get("15");
 
-          try {
-            id = expandedResult.getProductID();
-            expiryDate = DateConverter.getDateFromString(expandedResult.getExpirationDate());
-          } catch (ParseException e) {
-            // If an error occurs the date should stay null
-          } catch (NullPointerException e) {
-            /*
-            If the result could not be parsed to an ExpandedProductParsedResult, the date stays null
-            and the product id becomes the text of the normal result
-             */
+            try {
+              Date expiryDate = DateConverter.getDateFromString(values.get(dateKey));
+              intent.putExtra(resources.getString(R.string.extra_product),
+                  new Product(id, null, expiryDate));
+            } catch (ParseException e) {
+              intent.putExtra(resources.getString(R.string.extra_product), new Product(id));
+            }
+          } else {
+            // any other barcode, thus we just take the plain text as its GTIN
             id = result.getText();
+            intent.putExtra(resources.getString(R.string.extra_product), new Product(id));
           }
-
-          intent.putExtra(resources.getString(R.string.extra_product),
-              new Product(id, null, expiryDate));
 
           ((Activity) context).finish();
           context.startActivity(intent);
