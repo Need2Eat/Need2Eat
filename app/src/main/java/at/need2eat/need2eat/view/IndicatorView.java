@@ -158,15 +158,6 @@ public class IndicatorView extends View {
     });
   }
 
-  /**
-   * Retrieves the dimension with the given resource ID from this View's resources.
-   * @param resource the resource ID of the dimension to retrieve
-   * @return the dimension from this View's resources <u>in pixels</u>
-   */
-  private int getDimension(int resource) {
-    return getResources().getDimensionPixelSize(resource);
-  }
-
   @Override
   protected void onDraw(Canvas canvas) {
     if (!setUp) {

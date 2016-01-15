@@ -69,6 +69,10 @@ public class MainActivity extends AdapterActivity<Product> {
     productView.setLayoutManager(new LinearLayoutManager(this));
   }
 
+  /**
+   * Starts a new {@link DatabaseTask} that will call {@link #refreshAdapter(List)} with the
+   * current entries from the database once finished.
+   */
   private void loadProductsAsync() {
     new DatabaseTask(this, mode).run();
   }
