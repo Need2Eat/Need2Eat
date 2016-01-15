@@ -31,6 +31,9 @@ public class OutpanManager implements OutpanHandler {
 
   @Override
   public String getName(String gtin) {
+    if (gtin == null) {
+      return "";
+    }
     /*
     These values must be declared before the try statement in order to close/disconnect them in the
     finally block as HttpsURLConnection is not AutoClosable
