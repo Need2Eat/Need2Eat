@@ -75,7 +75,7 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
           Intent intent = new Intent(context, EditActivity.class);
           String id;
 
-          if (result.getText().contains("]C1") || result.getText().contains("\u001D")) {
+          if (result.getText().contains("]C1")) {
             // a GS1-128 barcode containing the additional information we want
             Map<String, String> values = BarcodeAi.findAiValues(result.getText());
             id = values.get("01");
