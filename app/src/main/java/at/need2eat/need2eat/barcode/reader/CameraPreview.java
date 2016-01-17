@@ -79,10 +79,10 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
             // a GS1-128 barcode containing the additional information we want
             Map<String, String> values = BarcodeAi.findAiValues(result.getText());
             id = values.get("01");
-            String dateKey = (values.containsKey("17")) ? values.get("17") : values.get("15");
+            String dateKey = (values.containsKey("17")) ? "17" : "15";
 
             try {
-              Date expiryDate = DateConverter.getDateFromString(values.get(dateKey));
+              Date expiryDate = DateConverter.getDateFromAiValue(values.get(dateKey));
               intent.putExtra(resources.getString(R.string.extra_product),
                   new Product(id, null, expiryDate));
             } catch (ParseException e) {
