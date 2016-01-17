@@ -36,4 +36,20 @@ public class DateConverter {
     }
     return SDF.format(expiryDate);
   }
+
+  /**
+   * Get a {@link Date} from a barcode AI value
+   * @param aiValue The AI value that should be converted to a {@code Date}
+   * @return The converted {@code Date}
+   * @throws ParseException if the AI value could not be converted
+   */
+  public static Date getDateFromAiValue(String aiValue) throws ParseException {
+    // we don't except anyone would use this app after 2099
+    String dateValue = String.format("%s.%s.%s",
+        aiValue.substring(4),
+        aiValue.substring(2, 4),
+        "20" + aiValue.substring(0, 2));
+
+    return DateConverter.getDateFromString(dateValue);
+  }
 }
