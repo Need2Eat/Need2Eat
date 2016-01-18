@@ -45,10 +45,10 @@ public class DateConverter {
    */
   public static Date getDateFromAiValue(String aiValue) throws ParseException {
     // we don't expect anyone would use this app after 2099
-    String dateValue = String.format("%s.%s.%s",
+    String dateValue = String.format("%s.%s.20%s",
         aiValue.substring(4),
         aiValue.substring(2, 4),
-        "20" + aiValue.substring(0, 2));
+        aiValue.substring(0, 2));
 
     return DateConverter.getDateFromString(dateValue);
   }
