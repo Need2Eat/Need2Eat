@@ -44,7 +44,7 @@ public class DateConverter {
    * @throws ParseException if the AI value could not be converted
    */
   public static Date getDateFromAiValue(String aiValue) throws ParseException {
-    // we don't except anyone would use this app after 2099
+    // we don't expect anyone would use this app after 2099
     String dateValue = String.format("%s.%s.%s",
         aiValue.substring(4),
         aiValue.substring(2, 4),
