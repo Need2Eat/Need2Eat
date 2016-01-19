@@ -51,19 +51,6 @@ public class EditActivity extends AppCompatActivity {
     protected void onPostExecute(Void aVoid) {
       if (productname.equals("")) {
         productnameEdit.setHint(getResources().getString(R.string.no_name_hint));
-
-        productnameEdit.addTextChangedListener(new TextWatcher() {
-          @Override
-          public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            productnameEdit.setHint("");
-          }
-
-          @Override
-          public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-          @Override
-          public void afterTextChanged(Editable s) {}
-        });
       } else {
         productnameEdit.setText(productname);
       }
