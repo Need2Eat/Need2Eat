@@ -146,6 +146,7 @@ public class IndicatorView extends View {
     backgroundPaint.setColor(info.backgroundColor);
     textPaint.setColor(info.textColor);
     textPaint.setTextAlign(Paint.Align.CENTER);
+    //once the layout specifications are available, we configure our drawing parameters:
     post(new Runnable() {
       @Override
       public void run() {
@@ -160,7 +161,7 @@ public class IndicatorView extends View {
 
   @Override
   protected void onDraw(Canvas canvas) {
-    if (!setUp) {
+    if (!setUp) { //if this View has not yet been initialized, we don't draw anything
       return;
     }
     canvas.drawCircle(specs.cx, specs.cy, specs.radius, backgroundPaint);
