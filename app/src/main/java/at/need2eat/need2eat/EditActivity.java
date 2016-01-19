@@ -5,8 +5,6 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.widget.*;
 
 import java.text.ParseException;
@@ -30,33 +28,6 @@ import butterknife.OnClick;
  * @author Maxi Nothnagel - mx.nothnagel@gmail.com
  */
 public class EditActivity extends AppCompatActivity {
-
-  /**
-   * This private class starts an asynchronous task to connect to the Outpan database and get the
-   * name of a specific product. To start the asynchronous task call
-   * {@link at.need2eat.need2eat.EditActivity.OutpanTask#execute(Object[])} with a {@code String}
-   * Array containing the API key of Outpan (first element) and the GTIN of the product. The
-   * {@code EditText} field containing the name of the product will be set automatically after the
-   * call has been finished OR a hint will be set if the product cannot be found in the Outpan
-   * database
-   */
-  private class OutpanTask extends AsyncTask<String, Void, Void> {
-
-    @Override
-    protected Void doInBackground(String... params) {
-      productname = new OutpanManager(params[0]).getName(params[1]);
-      return null;
-    }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
-      if (productname.equals("")) {
-        productnameEdit.setHint(getResources().getString(R.string.no_name_hint));
-      } else {
-        productnameEdit.setText(productname);
-      }
-    }
-  }
 
   @Bind(R.id.productNameEdit) protected EditText productnameEdit;
   @Bind(R.id.gtinTextEdit) protected EditText gtinEdit;
@@ -159,6 +130,33 @@ public class EditActivity extends AppCompatActivity {
   @OnClick(R.id.backButton)
   public void onBackButtonClicked() {
     finish();
+  }
+
+  /**
+   * This private class starts an asynchronous task to connect to the Outpan database and get the
+   * name of a specific product. To start the asynchronous task call
+   * {@link at.need2eat.need2eat.EditActivity.OutpanTask#execute(Object[])} with a {@code String}
+   * Array containing the API key of Outpan (first element) and the GTIN of the product. The
+   * {@code EditText} field containing the name of the product will be set automatically after the
+   * call has been finished OR a hint will be set if the product cannot be found in the Outpan
+   * database
+   */
+  private class OutpanTask extends AsyncTask<String, Void, Void> {
+
+    @Override
+    protected Void doInBackground(String... params) {
+      productname = new OutpanManager(params[0]).getName(params[1]);
+      return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+      if (productname.equals("")) {
+        productnameEdit.setHint(getResources().getString(R.string.no_name_hint));
+      } else {
+        productnameEdit.setText(productname);
+      }
+    }
   }
 
 }
