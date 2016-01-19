@@ -56,41 +56,6 @@ public class IndicatorView extends View {
   }
 
   /**
-   * This class represents data from an {@link IndicatorState} in form of actual resources instead
-   * of resource IDs.
-   */
-  private static class IndicatorInfo {
-
-    private int backgroundColor;
-    private int textColor;
-
-    public IndicatorInfo(IndicatorState state, Resources resources) {
-      this.backgroundColor = resources.getColor(state.backgroundColor);
-      this.textColor = resources.getColor(state.textColor);
-    }
-
-  }
-
-  /**
-   * This class represents a set of integers that define the location and radius of the circle in
-   * the {@link IndicatorView}.
-   * @author AM307
-   */
-  private class CircleSpecs {
-
-    private int cx;
-    private int cy;
-    private int radius;
-
-    public CircleSpecs(int width, int height) {
-      cx = width / 2;
-      cy = height / 2;
-      radius = Math.min(width, height) / 2;
-    }
-
-  }
-
-  /**
    * This variable contains the last number that is displayed in an {@link IndicatorView}. Any
    * number greater than this number will be displayed as this number with a plus sign suffix,
    * e.g. "30+" if this constant has the value 30.
@@ -166,6 +131,41 @@ public class IndicatorView extends View {
     }
     canvas.drawCircle(specs.cx, specs.cy, specs.radius, backgroundPaint);
     canvas.drawText(displayText, specs.cx, textOffset, textPaint);
+  }
+
+  /**
+   * This class represents data from an {@link IndicatorState} in form of actual resources instead
+   * of resource IDs.
+   */
+  private static class IndicatorInfo {
+
+    private int backgroundColor;
+    private int textColor;
+
+    public IndicatorInfo(IndicatorState state, Resources resources) {
+      this.backgroundColor = resources.getColor(state.backgroundColor);
+      this.textColor = resources.getColor(state.textColor);
+    }
+
+  }
+
+  /**
+   * This class represents a set of integers that define the location and radius of the circle in
+   * the {@link IndicatorView}.
+   * @author AM307
+   */
+  private class CircleSpecs {
+
+    private int cx;
+    private int cy;
+    private int radius;
+
+    public CircleSpecs(int width, int height) {
+      cx = width / 2;
+      cy = height / 2;
+      radius = Math.min(width, height) / 2;
+    }
+
   }
 
 }

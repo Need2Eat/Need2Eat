@@ -28,18 +28,6 @@ import butterknife.OnClick;
  */
 public class MainActivity extends AdapterActivity<Product> {
 
-  private class MainClickListener implements ProductClickListener {
-
-    @Override
-    public void onItemClick(Product product) {
-      //when an item is clicked, we take the user to the ProductActivity
-      Intent intent = new Intent(MainActivity.this, ProductActivity.class);
-      intent.putExtra(getResources().getString(R.string.extra_product), product);
-      startActivity(intent);
-    }
-
-  }
-
   private MainClickListener clickListener = new MainClickListener();
 
   /**
@@ -126,4 +114,17 @@ public class MainActivity extends AdapterActivity<Product> {
     loadProductsAsync();
     super.onResume();
   }
+
+  private class MainClickListener implements ProductClickListener {
+
+    @Override
+    public void onItemClick(Product product) {
+      //when an item is clicked, we take the user to the ProductActivity
+      Intent intent = new Intent(MainActivity.this, ProductActivity.class);
+      intent.putExtra(getResources().getString(R.string.extra_product), product);
+      startActivity(intent);
+    }
+
+  }
+
 }
