@@ -37,7 +37,8 @@ public class EditActivity extends AppCompatActivity {
    * {@link at.need2eat.need2eat.EditActivity.OutpanTask#execute(Object[])} with a {@code String}
    * Array containing the API key of Outpan (first element) and the GTIN of the product. The
    * {@code EditText} field containing the name of the product will be set automatically after the
-   * call has been finished
+   * call has been finished OR a hint will be set if the product cannot be found in the Outpan
+   * database
    */
   private class OutpanTask extends AsyncTask<String, Void, Void> {
 
