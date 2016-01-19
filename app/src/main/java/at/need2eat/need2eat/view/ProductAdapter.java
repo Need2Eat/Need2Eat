@@ -17,10 +17,10 @@ import at.need2eat.need2eat.R;
  */
 public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
 
-  //List of all currently displayed Products
+  /** List of all currently displayed Products */
   private List<Product> products;
 
-  //Listener for clicks on ProductViewHolders in the GUI
+  /** Listener for clicks on ProductViewHolders in the GUI */
   private ProductClickListener clickListener;
 
   /**

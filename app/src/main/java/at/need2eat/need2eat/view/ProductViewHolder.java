@@ -21,7 +21,7 @@ public class ProductViewHolder extends RecyclerView.ViewHolder {
   @Bind(R.id.expirationDate) protected TextView expirationDateView;
   @Bind(R.id.indicator) protected IndicatorView indicatorView;
 
-  //The product this ViewHolder is holding
+  /* The product this ViewHolder is holding */
   private Product product;
 
   /**
