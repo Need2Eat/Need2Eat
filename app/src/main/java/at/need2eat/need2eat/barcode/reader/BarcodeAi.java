@@ -23,9 +23,9 @@ public enum BarcodeAi {
   }
 
   /**
-   * Get the length of the value of the AI. If the AI is {@link BarcodeAi#VARIABLE} or an
+   * Get the length of the value of the AI. If the BarcodeAi is {@link BarcodeAi#VARIABLE} or
    * {@link BarcodeAi#UNCOMMON_AI}, the length is -1
-   * @return the length
+   * @return the number of digits reserved for the value of the BarcodeAi
    */
   public int getLength() {
     return this.length;
