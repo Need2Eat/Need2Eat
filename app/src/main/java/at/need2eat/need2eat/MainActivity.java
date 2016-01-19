@@ -32,6 +32,7 @@ public class MainActivity extends AdapterActivity<Product> {
 
     @Override
     public void onItemClick(Product product) {
+      //when an item is clicked, we take the user to the ProductActivity
       Intent intent = new Intent(MainActivity.this, ProductActivity.class);
       intent.putExtra(getResources().getString(R.string.extra_product), product);
       startActivity(intent);
@@ -41,6 +42,11 @@ public class MainActivity extends AdapterActivity<Product> {
 
   private MainClickListener clickListener = new MainClickListener();
 
+  /**
+   * Used to determine whether the currently selected items are sorted or not.
+   * {@link DatabaseMode#SELECT} indicates an unsorted, {@link DatabaseMode#SORTED_SELECT} a sorted
+   * list of products.
+   */
   private DatabaseMode mode = DatabaseMode.SELECT;
 
   /**
@@ -98,6 +104,7 @@ public class MainActivity extends AdapterActivity<Product> {
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         return true;
+      //Button to sort products by expiry date
       case R.id.action_sort:
         mode = (mode == DatabaseMode.SELECT) ? DatabaseMode.SORTED_SELECT : DatabaseMode.SELECT;
         loadProductsAsync();
